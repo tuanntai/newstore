@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { PrivateRoute } from './component/PrivateRoute/PrivateRoute'
 import SignIn from './pages/SignIn/SignIn'
 import './App.less'

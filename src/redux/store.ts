@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './reducer/authReducer'
 import navigateReducer from './reducer/navigateReducer'
+import newsReducer from './reducer/news/newsReducer'
 const reducer = {
   auth: authReducer,
-  navigate: navigateReducer
+  navigate: navigateReducer,
+  news: newsReducer
 }
 
 const store = configureStore({

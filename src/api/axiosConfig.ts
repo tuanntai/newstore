@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { getAccessToken } from '../utils/localStorageService'
+
 const axiosConfig = axios.create({
-  baseURL: process.env.REACT_APP_SERVICE_URL,
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json'
   }

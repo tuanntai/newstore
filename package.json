@@ -5,6 +5,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@craco/craco": "^6.4.2",
+    "@lingui/core": "^3.13.0",
     "@reduxjs/toolkit": "^1.6.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -53,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@lingui/macro": "^3.13.0",
     "prettier": "^2.5.0"
   }
 }
