@@ -1,16 +1,22 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { IPinnedNews, IPostNewsRequest, IPostNewsResponse } from '../../../api/news/interface'
+import {
+  INews,
+  IPinnedNews,
+  IPostNewsRequest,
+  IPostNewsResponse
+} from '../../../api/news/interface'
 import {
   deleteNewsByIdApi,
   getDraftApi,
   getNewsByIdApi,
   getPinnedNewsApi,
   getPublishedApi,
+  getPublishedNewsApi,
   postNewsApi
 } from '../../../api/news/news'
 import { instanceOfDataError } from '../../../utils/apiErrorService'
 
-export const getPublished = createAsyncThunk(
+export const getPublished = createAsyncThunk<INews[]>(
   'news/getPublished',
   async (_, { rejectWithValue }) => {
     const response = await getPublishedApi()
@@ -35,18 +41,32 @@ export const postNews = createAsyncThunk<IPostNewsResponse, IPostNewsRequest>(
   }
 )
 
-export const getDraft = createAsyncThunk('news/getDraft', async (_, { rejectWithValue }) => {
-  const response = await getDraftApi()
-  if (instanceOfDataError(response)) {
-    return rejectWithValue(response.error)
+export const getDraft = createAsyncThunk<INews[]>(
+  'news/getDraft',
+  async (_, { rejectWithValue }) => {
+    const response = await getDraftApi()
+    if (instanceOfDataError(response)) {
+      return rejectWithValue(response.error)
+    }
+    return response
   }
-  return response
-})
+)
 
 export const getPinnedNews = createAsyncThunk<IPinnedNews[]>(
   'news/getPinnedNews',
   async (_, { rejectWithValue }) => {
     const response = await getPinnedNewsApi()
+    if (instanceOfDataError(response)) {
+      return rejectWithValue(response.error)
+    }
+    return response
+  }
+)
+
+export const getPublishedNews = createAsyncThunk(
+  'news/getPublishedNews',
+  async (page: number, { rejectWithValue }) => {
+    const response = await getPublishedNewsApi(page)
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
     }
@@ -61,7 +81,7 @@ export const getNewsById = createAsyncThunk(
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
     }
-    return response
+    return { response, id }
   }
 )
 
@@ -70,7 +90,7 @@ export const deleteNewsById = createAsyncThunk(
   async (id: number, { rejectWithValue }) => {
     const response = await deleteNewsByIdApi(id)
     if (instanceOfDataError(response)) {
-      return rejectWithValue(response.error)
+      return id
     }
     return { response, id }
   }

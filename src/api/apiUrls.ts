@@ -5,5 +5,8 @@ export const NEWS_API_URLS = {
   getPinnedNews: '/news/pinnedNews',
   getNewsById: (id: number) => {
     return `/news/${id}`
+  },
+  getPublishedNews: (page: number) => {
+    return `news/publishedNews?page=${page}`
   }
 }
