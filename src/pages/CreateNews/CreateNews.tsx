@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
 import { Button, Typography, Form, Input, Switch, Upload, notification } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
-import { InboxOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import {  LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import './CreateNews.less'
 import { ENewsStatus } from '../../api/news/interface'
 import { postNews } from '../../redux/actions/news/news'
@@ -13,9 +13,7 @@ import 'react-quill/dist/quill.snow.css'
 import { QUILL_MODULES, QUILL_FORMATS } from './constanst'
 
 const CreateNews: React.FC = () => {
-  const { TextArea } = Input
   const { Option } = Select
-  const { Dragger } = Upload
 
   const dispatch = useAppDispatch()
   const [isPin, setIsPin] = useState(false)
@@ -93,6 +91,7 @@ const CreateNews: React.FC = () => {
         { name: 'title', value: '' },
         { name: 'excerpt', value: '' }
       ])
+      setContentText('')
     })
   }
   /////////////////////////////////////////////////////////////////////////

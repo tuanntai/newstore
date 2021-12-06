@@ -93,7 +93,7 @@ const News: React.FC = () => {
       title: t`Thumbnail`,
       dataIndex: 'imgUrl',
       key: 'imgUrl',
-      render: (text: string) => <img alt={text} src={text} />
+      render: (text: string,action: IPinnedNews) => <img alt={`img${action.id}`} src={text} />
     },
     {
       title: t`Action`,
@@ -147,7 +147,7 @@ const News: React.FC = () => {
       title: t`Thumbnail`,
       dataIndex: 'imgUrl',
       key: 'imgUrl',
-      render: (text: string) => <img alt={text} src={text} />
+      render: (text: string,action:INews) => <img alt={`img${action.id}`} src={text} />
     },
     {
       title: t`Action`,
