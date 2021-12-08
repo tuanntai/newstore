@@ -1,10 +1,10 @@
 import { IDataError } from '../../utils/apiErrorService'
 import { deleteApi, getApi, postApi } from '../../utils/apiHelper'
 import { NEWS_API_URLS } from '../apiUrls'
-import { IPinnedNews, IPostNewsRequest, IPostNewsResponse } from './interface'
+import { INews, IPinnedNews, IPostNewsRequest, IPostNewsResponse } from './interface'
 
 export const getPublishedApi = async () => {
-  const data = await getApi(NEWS_API_URLS.getPublished)
+  const data = await getApi<INews[]>(NEWS_API_URLS.getPublished)
   return data
 }
 
@@ -31,12 +31,17 @@ export const postNewsApi = async ({
 }
 
 export const getDraftApi = async () => {
-  const data = await getApi(NEWS_API_URLS.getDraft)
+  const data = await getApi<INews[]>(NEWS_API_URLS.getDraft)
   return data
 }
 
 export const getPinnedNewsApi = async () => {
   const data = await getApi<IPinnedNews[]>(NEWS_API_URLS.getPinnedNews)
+  return data
+}
+
+export const getPublishedNewsApi = async (page: number) => {
+  const data = await getApi<IPinnedNews[]>(NEWS_API_URLS.getPublishedNews(page))
   return data
 }
 

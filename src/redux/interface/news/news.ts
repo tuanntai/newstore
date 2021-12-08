@@ -1,9 +1,12 @@
-import { IPinnedNews, IPostNewsResponse } from '../../../api/news/interface'
+import { INews, IPinnedNews, IPostNewsResponse } from '../../../api/news/interface'
 
 export interface INewsState {
   newsId: number
-  publishedNews: any[]
+  newsInfo: any
+  publishedNews: INews[]
+  draftNews: INews[]
   pinnedNews: IPinnedNews[]
+  publishedNewsByPage: IPinnedNews[]
   postInfo: IPostNewsResponse | null
   loading: boolean
   success: boolean

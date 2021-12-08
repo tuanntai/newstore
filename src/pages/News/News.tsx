@@ -1,14 +1,22 @@
+import React, { useEffect, useState } from 'react'
 import { t } from '@lingui/macro'
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Typography, Table, Modal, notification } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Button, Typography, Modal, notification } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { deleteNewsById, getPinnedNews, getPublished } from '../../redux/actions/news/news'
+import {
+  deleteNewsById,
+  getDraft,
+  getNewsById,
+  getPinnedNews,
+  getPublished
+} from '../../redux/actions/news/news'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
-import { newsSelector, setNewsId } from '../../redux/reducer/news/newsReducer'
-import { IPinnedNews } from '../../api/news/interface'
+import { newsSelector, resetNewsProgress, setNewsId } from '../../redux/reducer/news/newsReducer'
+import { INews, IPinnedNews } from '../../api/news/interface'
+import ListTable from '../../component/ListTable/ListTable'
 import './News.less'
+import { format } from 'date-fns'
 
 const News: React.FC = () => {
   const navigate = useNavigate()
@@ -19,11 +27,16 @@ const News: React.FC = () => {
   const newsId = useAppSelector(newsSelector.newsIdSelector)
   const errorMessage = useAppSelector(newsSelector.newsErrorSelector)
   const progress = useAppSelector(newsSelector.newsProgressSelector)
+  const draftNewsList = useAppSelector(newsSelector.draftNewsSelector)
+
+  console.log(draftNewsList)
 
   useEffect(() => {
     dispatch(setCurrentPage('News'))
+    dispatch(getDraft())
     dispatch(getPublished())
     dispatch(getPinnedNews())
+    dispatch(resetNewsProgress())
   }, [dispatch])
 
   useEffect(() => {
@@ -37,7 +50,8 @@ const News: React.FC = () => {
         message: `Successfully`,
         placement: 'topRight'
       })
-  }, [progress, errorMessage])
+    dispatch(resetNewsProgress())
+  }, [progress, errorMessage, dispatch])
 
   const handleDelete = (id: number) => {
     dispatch(setNewsId(id))
@@ -79,7 +93,7 @@ const News: React.FC = () => {
       title: t`Thumbnail`,
       dataIndex: 'imgUrl',
       key: 'imgUrl',
-      render: (text: string) => <img alt={text} src={text} />
+      render: (text: string,action: IPinnedNews) => <img alt={`img${action.id}`} src={text} />
     },
     {
       title: t`Action`,
@@ -87,6 +101,60 @@ const News: React.FC = () => {
       key: 'action',
       width: '100px',
       render: (record: any, action: IPinnedNews) => (
+        <Button className="delete-button" onClick={() => handleDelete(action.id)}>
+          Delete
+        </Button>
+      )
+    }
+  ]
+
+  const newsColumn = [
+    {
+      title: t`ID`,
+      dataIndex: 'id',
+      key: 'id',
+      sorter: (a: any, b: any) => a.id - b.id,
+      render: (text: string) => <div key={text}>{text}</div>
+    },
+    {
+      title: t`Tittle`,
+      dataIndex: 'tittle',
+      key: 'tittle'
+    },
+    {
+      title: t`Excerpt`,
+      dataIndex: 'excerpt',
+      key: 'excerpt'
+    },
+    {
+      title: t`Content`,
+      dataIndex: 'content',
+      key: 'content'
+    },
+    {
+      title: t`Time Created`,
+      dataIndex: 'timeCreated',
+      key: 'timeCreated',
+      render: (text: string) => <div>{format(new Date(text), 'dd/MM/yy')}</div>
+    },
+    {
+      title: t`Time Modified`,
+      dataIndex: 'timeModified',
+      key: 'timeModified',
+      render: (text: string) => <div>{format(new Date(text), 'dd/MM/yy')}</div>
+    },
+    {
+      title: t`Thumbnail`,
+      dataIndex: 'imgUrl',
+      key: 'imgUrl',
+      render: (text: string,action:INews) => <img alt={`img${action.id}`} src={text} />
+    },
+    {
+      title: t`Action`,
+      dataIndex: 'action',
+      key: 'action',
+      width: '100px',
+      render: (record: any, action: INews) => (
         <Button className="delete-button" onClick={() => handleDelete(action.id)}>
           Delete
         </Button>
@@ -102,30 +170,27 @@ const News: React.FC = () => {
           Create Task
         </Button>
       </div>
-      <div className="list-container">
-        <Typography className="heading-title">Pinned News</Typography>
-        <Table
-          bordered
-          scroll={{ x: 1200 }}
-          dataSource={pinnedNewsList}
-          pagination={false}
-          columns={pinnedColumn}
-          className="list"
-        />
-      </div>
-
-      <div className="list-container">
-        <Typography className="heading-title">Published News</Typography>
-        <Table
-          bordered
-          scroll={{ x: 1200 }}
-          dataSource={publishedNewsList}
-          pagination={false}
-          columns={publishedColumn}
-          className="list"
-        />
-      </div>
-
+      <ListTable
+        title="Pinned News"
+        dataSource={pinnedNewsList}
+        pagination={false}
+        columns={pinnedColumn}
+        scroll={{ x: 1200 }}
+      />
+      <ListTable
+        title="Published News"
+        dataSource={publishedNewsList}
+        pagination={false}
+        columns={newsColumn}
+        scroll={{ x: 1200 }}
+      />
+      <ListTable
+        title="Draft News"
+        dataSource={draftNewsList}
+        pagination={false}
+        columns={newsColumn}
+        scroll={{ x: 1200 }}
+      />
       <Modal
         title={`Delete News Id ${newsId}`}
         visible={showModal}
@@ -139,22 +204,5 @@ const News: React.FC = () => {
     </div>
   )
 }
-
-const publishedColumn = [
-  {
-    title: t`ID`,
-    dataIndex: 'id',
-    key: 'id',
-    sorter: (a: any, b: any) => a.id - b.id,
-    render: (text: string) => <div key={text}>{text}</div>
-  },
-  {
-    title: t`Action`,
-    dataIndex: 'action',
-    key: 'action',
-    width: '100px',
-    render: () => <Button className="delete-button">Delete</Button>
-  }
-]
 
 export default News

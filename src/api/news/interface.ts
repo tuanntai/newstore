@@ -1,3 +1,8 @@
+export enum ENewsStatus {
+  PUBLIC = 'PUBLISHED',
+  DRAFT = 'DRAFT'
+}
+
 export interface IPostNewsRequest {
   tittle: string
   excerpt: string
@@ -5,11 +10,6 @@ export interface IPostNewsRequest {
   isPinned: boolean
   imgUrl: string
   status: ENewsStatus
-}
-
-export enum ENewsStatus {
-  PUBLIC = 'PUBLIC',
-  DRAFT = 'DRAFT'
 }
 
 export interface IPostNewsResponse {
@@ -29,4 +29,16 @@ export interface IPinnedNews {
   tittle: string
   imgUrl: string
   excerpt: string
+}
+
+export interface INews {
+  content: string
+  excerpt: string
+  id: number
+  imgUrl: string
+  isPinned: boolean
+  status: ENewsStatus
+  timeCreated: string
+  timeModified: string
+  tittle: string
 }

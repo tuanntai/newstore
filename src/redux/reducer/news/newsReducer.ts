@@ -1,13 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { deleteNewsById, getPinnedNews, getPublished, postNews } from '../../actions/news/news'
+import {
+  deleteNewsById,
+  getDraft,
+  getNewsById,
+  getPinnedNews,
+  getPublished,
+  postNews
+} from '../../actions/news/news'
 import { INewsState } from '../../interface/news/news'
 import { RootState } from '../../store'
 import { createSelector } from 'reselect'
-import { IPinnedNews } from '../../../api/news/interface'
 
 const initialState: INewsState = {
   newsId: 0,
+  newsInfo: null,
+  draftNews: [],
   pinnedNews: [],
+  publishedNewsByPage: [],
   postInfo: null,
   publishedNews: [],
   loading: false,
@@ -21,6 +30,10 @@ const newsSlice = createSlice({
   reducers: {
     setNewsId: (state, action) => {
       state.newsId = action.payload
+    },
+    resetNewsProgress: (state) => {
+      state.success = false
+      state.error = null
     }
   },
   extraReducers: (builder) => {
@@ -30,7 +43,7 @@ const newsSlice = createSlice({
       })
       .addCase(getPublished.fulfilled, (state, action) => {
         state.loading = false
-        state.publishedNews = action.payload as any
+        state.publishedNews = action.payload
       })
       .addCase(getPublished.rejected, (state, action) => {
         state.loading = false
@@ -69,14 +82,44 @@ const newsSlice = createSlice({
       .addCase(deleteNewsById.fulfilled, (state, action) => {
         state.loading = false
         state.success = true
-        state.pinnedNews = state.pinnedNews.filter(
-          (item: IPinnedNews) => item.id !== action.payload
-        )
-        state.publishedNews = state.pinnedNews.filter((item: any) => item.id !== action.payload)
+        // state.pinnedNews = state.pinnedNews.filter(
+        //   (item: IPinnedNews) => item.id !== action.payload
+        // )
+        // state.publishedNews = state.pinnedNews.filter((item: any) => item.id !== action.payload)
       })
-      .addCase(deleteNewsById.rejected, (state, action) => {
+      .addCase(deleteNewsById.rejected, (state, action: any) => {
+        console.log(action.payload)
+
         state.loading = false
         state.success = true
+        state.error = action.payload as string
+        // state.pinnedNews = state.pinnedNews.filter(
+        //   (item: IPinnedNews) => item.id !== action.payload.id
+        // )
+        // state.publishedNews = state.pinnedNews.filter((item: any) => item.id !== action.payload)
+      })
+    builder
+      .addCase(getDraft.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getDraft.fulfilled, (state, action) => {
+        state.loading = false
+        state.draftNews = action.payload
+      })
+      .addCase(getDraft.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+      })
+    builder
+      .addCase(getNewsById.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getNewsById.fulfilled, (state, action) => {
+        state.loading = false
+        state.newsInfo = action.payload
+      })
+      .addCase(getNewsById.rejected, (state, action) => {
+        state.loading = false
         state.error = action.payload as string
       })
   }
@@ -84,17 +127,21 @@ const newsSlice = createSlice({
 
 const selectSelf = (state: RootState) => state.news
 const publishedSelector = createSelector(selectSelf, (state) => state.publishedNews)
+const draftNewsSelector = createSelector(selectSelf, (state) => state.draftNews)
 const pinnedNewsSelector = createSelector(selectSelf, (state) => state.pinnedNews)
 const newsErrorSelector = createSelector(selectSelf, (state) => state.error)
 const newsProgressSelector = createSelector(selectSelf, (state) => state.success)
 const newsIdSelector = createSelector(selectSelf, (state) => state.newsId)
+const newsInfoSelector = createSelector(selectSelf, (state) => state.newsInfo)
 
 export const newsSelector = {
   publishedSelector,
   newsErrorSelector,
   newsProgressSelector,
   pinnedNewsSelector,
-  newsIdSelector
+  newsIdSelector,
+  draftNewsSelector,
+  newsInfoSelector
 }
-export const { setNewsId } = newsSlice.actions
+export const { setNewsId, resetNewsProgress } = newsSlice.actions
 export default newsSlice.reducer
