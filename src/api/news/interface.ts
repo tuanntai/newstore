@@ -42,3 +42,18 @@ export interface INews {
   timeModified: string
   tittle: string
 }
+
+export interface INewsById {
+  id: number
+  tittle: string
+  content: string
+  excerpt: string
+  imgUrl: string
+  timeCreated: string
+  timeModified: string
+}
+
+export interface INewsEditRequest {
+  id: number
+  editedData: any
+}

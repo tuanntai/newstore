@@ -3,16 +3,18 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './SignIn.less'
 import { ILoginForm } from './interface'
-import { toast } from 'react-toastify'
 import { getAccessToken, setAccessToken } from '../../utils/localStorageService'
+import { useAppDispatch } from '../../redux/hook'
+import { authLogin } from '../../redux/actions/auth/auth'
 
 const SignIn: React.FC = () => {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { Title } = Typography
   const [form] = Form.useForm<ILoginForm>()
   const accessToken = getAccessToken()
   const [fields, setFields] = useState([
-    { name: 'username', value: '' },
+    { name: 'email', value: '' },
     { name: 'password', value: '' }
   ])
 
@@ -24,24 +26,16 @@ const SignIn: React.FC = () => {
 
   const handleLogin = () => {
     form.validateFields().then((values) => {
-      if (values.username === 'admindev' && values.password === '123qwe') {
-        setAccessToken('accessToken')
-        navigate('/')
-      } else {
-        toast.error('Wrong Name or Password!', {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined
+      dispatch(
+        authLogin({
+          email: values.email,
+          password: values.password
         })
-        setFields([
-          { name: 'username', value: '' },
-          { name: 'password', value: '' }
-        ])
-      }
+      )
+      setFields([
+        { name: 'email', value: '' },
+        { name: 'password', value: '' }
+      ])
     })
   }
 
@@ -57,7 +51,7 @@ const SignIn: React.FC = () => {
           onFinish={handleLogin}
         >
           <Title className="title">Login</Title>
-          <Form.Item name="username" label="Username" rules={[{ required: true }]}>
+          <Form.Item name="email" label="email" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
           <Form.Item name="password" label="Password" rules={[{ required: true }]}>

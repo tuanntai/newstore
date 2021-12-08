@@ -1,7 +1,7 @@
 import { IDataError } from '../../utils/apiErrorService'
-import { deleteApi, getApi, postApi } from '../../utils/apiHelper'
+import { deleteApi, getApi, patchApi, postApi } from '../../utils/apiHelper'
 import { NEWS_API_URLS } from '../apiUrls'
-import { INews, IPinnedNews, IPostNewsRequest, IPostNewsResponse } from './interface'
+import { INews, INewsById, IPinnedNews, IPostNewsRequest, IPostNewsResponse } from './interface'
 
 export const getPublishedApi = async () => {
   const data = await getApi<INews[]>(NEWS_API_URLS.getPublished)
@@ -46,11 +46,26 @@ export const getPublishedNewsApi = async (page: number) => {
 }
 
 export const getNewsByIdApi = async (id: number) => {
-  const data = await getApi(NEWS_API_URLS.getNewsById(id))
+  const data = await getApi<INewsById>(NEWS_API_URLS.getNewsById(id))
   return data
 }
 
 export const deleteNewsByIdApi = async (id: number) => {
   const data = await deleteApi(NEWS_API_URLS.getNewsById(id))
+  return data
+}
+
+export const uploadThumbnailApi = async (file: any) => {
+  console.log(file)
+  const data = await postApi(NEWS_API_URLS.uploadThumbnail, file, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  return data
+}
+
+export const editNewsApi = async (id: number, editedData: any) => {
+  const data = await patchApi(NEWS_API_URLS.getNewsById(id), editedData)
   return data
 }
