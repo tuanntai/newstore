@@ -47,3 +47,16 @@ export const deleteApi = async <TResponse>(path: string): Promise<TResponse> => 
     return handleServiceError(error as AxiosError) as TResponse
   }
 }
+
+export const patchApi = async <TRequest, TResponse>(
+  path: string,
+  payload: TRequest,
+  config?: AxiosRequestConfig
+): Promise<TResponse> => {
+  try {
+    const response = await axiosConfig.patch<TResponse>(path, payload, config)
+    return response.data
+  } catch (error) {
+    return handleServiceError(error as AxiosError) as TResponse
+  }
+}

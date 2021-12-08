@@ -1,19 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {
   deleteNewsById,
+  editNews,
   getDraft,
   getNewsById,
   getPinnedNews,
   getPublished,
-  postNews
+  postNews,
+  uploadThumbnail
 } from '../../actions/news/news'
 import { INewsState } from '../../interface/news/news'
 import { RootState } from '../../store'
 import { createSelector } from 'reselect'
+import { INews, IPinnedNews } from '../../../api/news/interface'
 
 const initialState: INewsState = {
+  thumbnailUrl: '',
   newsId: 0,
-  newsInfo: null,
+  newsInfo: {
+    timeCreated: '',
+    timeModified: '',
+    imgUrl: '',
+    tittle: '',
+    id: 0,
+    content: '',
+    excerpt: ''
+  },
   draftNews: [],
   pinnedNews: [],
   publishedNewsByPage: [],
@@ -82,21 +94,17 @@ const newsSlice = createSlice({
       .addCase(deleteNewsById.fulfilled, (state, action) => {
         state.loading = false
         state.success = true
-        // state.pinnedNews = state.pinnedNews.filter(
-        //   (item: IPinnedNews) => item.id !== action.payload
-        // )
-        // state.publishedNews = state.pinnedNews.filter((item: any) => item.id !== action.payload)
+        state.pinnedNews = state.pinnedNews.filter(
+          (item: IPinnedNews) => item.id !== action.payload
+        )
+        state.publishedNews = state.publishedNews.filter(
+          (item: INews) => item.id !== action.payload
+        )
+        state.draftNews = state.draftNews.filter((item: INews) => item.id !== action.payload)
       })
       .addCase(deleteNewsById.rejected, (state, action: any) => {
-        console.log(action.payload)
-
         state.loading = false
-        state.success = true
         state.error = action.payload as string
-        // state.pinnedNews = state.pinnedNews.filter(
-        //   (item: IPinnedNews) => item.id !== action.payload.id
-        // )
-        // state.publishedNews = state.pinnedNews.filter((item: any) => item.id !== action.payload)
       })
     builder
       .addCase(getDraft.pending, (state) => {
@@ -122,11 +130,37 @@ const newsSlice = createSlice({
         state.loading = false
         state.error = action.payload as string
       })
+    builder
+      .addCase(editNews.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(editNews.fulfilled, (state) => {
+        state.loading = false
+        state.success = true
+      })
+      .addCase(editNews.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+      })
+    builder
+      .addCase(uploadThumbnail.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(uploadThumbnail.fulfilled, (state, action) => {
+        state.loading = false
+        state.success = true
+        state.thumbnailUrl = action.payload as string
+      })
+      .addCase(uploadThumbnail.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+      })
   }
 })
 
 const selectSelf = (state: RootState) => state.news
 const publishedSelector = createSelector(selectSelf, (state) => state.publishedNews)
+const thumbnailSelector = createSelector(selectSelf, (state) => state.thumbnailUrl)
 const draftNewsSelector = createSelector(selectSelf, (state) => state.draftNews)
 const pinnedNewsSelector = createSelector(selectSelf, (state) => state.pinnedNews)
 const newsErrorSelector = createSelector(selectSelf, (state) => state.error)
@@ -141,7 +175,8 @@ export const newsSelector = {
   pinnedNewsSelector,
   newsIdSelector,
   draftNewsSelector,
-  newsInfoSelector
+  newsInfoSelector,
+  thumbnailSelector
 }
 export const { setNewsId, resetNewsProgress } = newsSlice.actions
 export default newsSlice.reducer

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { t } from '@lingui/macro'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Typography, Modal, notification } from 'antd'
-import { useNavigate } from 'react-router-dom'
 import {
   deleteNewsById,
   getDraft,
@@ -17,19 +16,19 @@ import { INews, IPinnedNews } from '../../api/news/interface'
 import ListTable from '../../component/ListTable/ListTable'
 import './News.less'
 import { format } from 'date-fns'
+import { useNavigate } from 'react-router'
 
 const News: React.FC = () => {
-  const navigate = useNavigate()
+  let navigate = useNavigate()  
   const dispatch = useAppDispatch()
   const [showModal, setShowModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
   const pinnedNewsList = useAppSelector(newsSelector.pinnedNewsSelector)
   const publishedNewsList = useAppSelector(newsSelector.publishedSelector)
   const newsId = useAppSelector(newsSelector.newsIdSelector)
   const errorMessage = useAppSelector(newsSelector.newsErrorSelector)
   const progress = useAppSelector(newsSelector.newsProgressSelector)
   const draftNewsList = useAppSelector(newsSelector.draftNewsSelector)
-
-  console.log(draftNewsList)
 
   useEffect(() => {
     dispatch(setCurrentPage('News'))
@@ -58,13 +57,20 @@ const News: React.FC = () => {
     setShowModal(!showModal)
   }
 
+  const handleEdit = (id: number) => {
+    dispatch(setNewsId(id))
+    dispatch(getNewsById(id))
+    navigate(`news/edit-news/${id}`)
+  }
+
   const deleteNews = (id: number) => {
     dispatch(deleteNewsById(id))
     setShowModal(!showModal)
   }
 
   const handleCancel = () => {
-    setShowModal(!showModal)
+    setShowModal(false)
+    setShowEditModal(false)
   }
 
   const handleCreate = () => {
@@ -93,17 +99,22 @@ const News: React.FC = () => {
       title: t`Thumbnail`,
       dataIndex: 'imgUrl',
       key: 'imgUrl',
-      render: (text: string,action: IPinnedNews) => <img alt={`img${action.id}`} src={text} />
+      render: (text: string, action: IPinnedNews) => <img alt={`img${action.id}`} src={text} />
     },
     {
       title: t`Action`,
       dataIndex: 'action',
       key: 'action',
-      width: '100px',
+      width: '120px',
       render: (record: any, action: IPinnedNews) => (
-        <Button className="delete-button" onClick={() => handleDelete(action.id)}>
-          Delete
-        </Button>
+        <div className="button-box">
+          <Button className="edit-button" type="primary" onClick={() => handleEdit(action.id)}>
+            Edit
+          </Button>
+          <Button className="delete-button" onClick={() => handleDelete(action.id)}>
+            Delete
+          </Button>
+        </div>
       )
     }
   ]
@@ -127,11 +138,6 @@ const News: React.FC = () => {
       key: 'excerpt'
     },
     {
-      title: t`Content`,
-      dataIndex: 'content',
-      key: 'content'
-    },
-    {
       title: t`Time Created`,
       dataIndex: 'timeCreated',
       key: 'timeCreated',
@@ -147,7 +153,7 @@ const News: React.FC = () => {
       title: t`Thumbnail`,
       dataIndex: 'imgUrl',
       key: 'imgUrl',
-      render: (text: string,action:INews) => <img alt={`img${action.id}`} src={text} />
+      render: (text: string, action: INews) => <img alt={`img${action.id}`} src={text} />
     },
     {
       title: t`Action`,
@@ -191,6 +197,7 @@ const News: React.FC = () => {
         columns={newsColumn}
         scroll={{ x: 1200 }}
       />
+      {/* Delete Modal */}
       <Modal
         title={`Delete News Id ${newsId}`}
         visible={showModal}
@@ -198,6 +205,18 @@ const News: React.FC = () => {
         onCancel={handleCancel}
         cancelText="Cancel"
         okText="Delete"
+      >
+        Are you sure ?
+      </Modal>
+
+      {/* Edit Modal */}
+      <Modal
+        title={`Edit News Id ${newsId}`}
+        visible={showEditModal}
+        onOk={() => deleteNews(newsId)}
+        onCancel={handleCancel}
+        cancelText="Cancel"
+        okText="Submit"
       >
         Are you sure ?
       </Modal>

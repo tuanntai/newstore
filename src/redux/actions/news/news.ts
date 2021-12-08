@@ -1,18 +1,22 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {
   INews,
+  INewsById,
+  INewsEditRequest,
   IPinnedNews,
   IPostNewsRequest,
   IPostNewsResponse
 } from '../../../api/news/interface'
 import {
   deleteNewsByIdApi,
+  editNewsApi,
   getDraftApi,
   getNewsByIdApi,
   getPinnedNewsApi,
   getPublishedApi,
   getPublishedNewsApi,
-  postNewsApi
+  postNewsApi,
+  uploadThumbnailApi
 } from '../../../api/news/news'
 import { instanceOfDataError } from '../../../utils/apiErrorService'
 
@@ -74,14 +78,14 @@ export const getPublishedNews = createAsyncThunk(
   }
 )
 
-export const getNewsById = createAsyncThunk(
+export const getNewsById = createAsyncThunk<INewsById, number>(
   'news/getNewsById',
   async (id: number, { rejectWithValue }) => {
     const response = await getNewsByIdApi(id)
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
     }
-    return { response, id }
+    return response
   }
 )
 
@@ -89,9 +93,19 @@ export const deleteNewsById = createAsyncThunk(
   'news/deleteNewsById',
   async (id: number, { rejectWithValue }) => {
     const response = await deleteNewsByIdApi(id)
-    if (instanceOfDataError(response)) {
-      return id
-    }
-    return { response, id }
+    return response
+  }
+)
+
+export const uploadThumbnail = createAsyncThunk('news/uploadThumbnail', async (file: any) => {
+  const response = await uploadThumbnailApi(file)
+  return response
+})
+
+export const editNews = createAsyncThunk(
+  'news/editNews',
+  async ({ editedData, id }: INewsEditRequest, { rejectWithValue }) => {
+    const response = await editNewsApi(id, editedData)
+    return response
   }
 )
