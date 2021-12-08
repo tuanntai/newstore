@@ -1,34 +1,35 @@
-import { Modal, Select } from 'antd'
+import { Modal, Select, Switch } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
 import { Button, Typography, Form, Input, notification } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import '../CreateNews/CreateNews.less'
 import { ENewsStatus } from '../../api/news/interface'
-import { editNews, uploadThumbnail } from '../../redux/actions/news/news'
+import { editNews } from '../../redux/actions/news/news'
 import { newsSelector, resetNewsProgress } from '../../redux/reducer/news/newsReducer'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { QUILL_MODULES, QUILL_FORMATS } from '../CreateNews/constant'
+import UploadFile from '../../component/UploadFile/UploadFile'
 
 const EditNews: React.FC = () => {
   const { Option } = Select
-  const dispatch = useAppDispatch()
-  const [showModal, setShowModal] = useState(false)
-  const [postStatus, setPostStatus] = useState<ENewsStatus>(ENewsStatus.PUBLIC)
-  const newsId = useAppSelector(newsSelector.newsIdSelector)
-  const errorMessage = useAppSelector(newsSelector.newsErrorSelector)
-  const progress = useAppSelector(newsSelector.newsProgressSelector)
-  const [imgUrl, setImgUrl] = useState('')
   const [form] = Form.useForm()
+  const dispatch = useAppDispatch()
+  const [imgUrl, setImgUrl] = useState('')
+  const [showModal, setShowModal] = useState(false)
   const [contentText, setContentText] = useState('')
+  const newsId = useAppSelector(newsSelector.newsIdSelector)
+  const progress = useAppSelector(newsSelector.newsProgressSelector)
+  const errorMessage = useAppSelector(newsSelector.newsErrorSelector)
+  const [postStatus, setPostStatus] = useState<ENewsStatus>(ENewsStatus.PUBLIC)
   const newsInfo = useAppSelector(newsSelector.newsInfoSelector)
+
   const [newsFields, setNewsFields] = useState([
     { name: 'title', value: newsInfo.tittle },
     { name: 'excerpt', value: newsInfo.excerpt }
   ])
 
-  /////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     dispatch(setCurrentPage('Edit News'))
     dispatch(resetNewsProgress())
@@ -73,17 +74,6 @@ const EditNews: React.FC = () => {
     })
   }
 
-  const handleFileChange = (e: any) => {
-    if (e.target.files) {
-      let formData = new FormData()
-      console.log(e.target.files[0])
-      formData.append('upload', e.target.files[0])
-      dispatch(uploadThumbnail(formData))
-    }
-  }
-
-  /////////////////////////////////////////////////////////////////////////
-
   const handleContentChange = (value: string) => {
     setContentText(value)
   }
@@ -96,7 +86,6 @@ const EditNews: React.FC = () => {
     setPostStatus(value)
   }
 
-  //////////////////////////////////////////////////////////////
   return (
     <Form
       name="basic"
@@ -130,19 +119,8 @@ const EditNews: React.FC = () => {
             <Typography className="title">Thumbnail</Typography>
           </div>
           <div className="upload-container">
-            <input
-              id="image"
-              accept="image/png/jpg"
-              type="file"
-              name="file"
-              onChange={(event: any) => handleFileChange(event)}
-              defaultValue={newsInfo.imgUrl}
-            />
+            <UploadFile imgUrl={imgUrl} setImgUrl={setImgUrl} />
           </div>
-          {/* <div className="pin-container">
-            <Typography>Pin :</Typography>
-            <Switch onChange={handleSetPin} defaultChecked />
-          </div> */}
           <div className="select-container">
             <Typography>Select Type:</Typography>
             <Select
