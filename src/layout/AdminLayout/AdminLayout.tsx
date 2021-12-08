@@ -5,6 +5,7 @@ import { useAppSelector } from '../../redux/hook'
 import { navigateSelector } from '../../redux/reducer/navigateReducer'
 import Navbar from '../Navbar/Navbar'
 import './AdminLayout.less'
+import { Outlet } from 'react-router'
 const { Content, Sider, Header } = Layout
 
 const AdminLayout = ({ children }: any) => {
@@ -32,6 +33,7 @@ const AdminLayout = ({ children }: any) => {
           <span className="currentPage-name"> {currentPage} </span>
         </Header>
         <Content className="site-layout-background content-layout">{children}</Content>
+        <Outlet />
       </Layout>
     </Layout>
   )

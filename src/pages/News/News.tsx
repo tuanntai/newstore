@@ -19,7 +19,7 @@ import { format } from 'date-fns'
 import { useNavigate } from 'react-router'
 
 const News: React.FC = () => {
-  let navigate = useNavigate()  
+  let navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [showModal, setShowModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
@@ -99,7 +99,11 @@ const News: React.FC = () => {
       title: t`Thumbnail`,
       dataIndex: 'imgUrl',
       key: 'imgUrl',
-      render: (text: string, action: IPinnedNews) => <img alt={`img${action.id}`} src={text} />
+      render: (text: string, action: IPinnedNews) => (
+        <div className="thumbnail-box">
+          <img alt={`img${action.id}`} src={text} />
+        </div>
+      )
     },
     {
       title: t`Action`,
@@ -153,7 +157,11 @@ const News: React.FC = () => {
       title: t`Thumbnail`,
       dataIndex: 'imgUrl',
       key: 'imgUrl',
-      render: (text: string, action: INews) => <img alt={`img${action.id}`} src={text} />
+      render: (text: string, action: INews) => (
+        <div className="thumbnail-box">
+          <img alt={`img${action.id}`} src={text} />
+        </div>
+      )
     },
     {
       title: t`Action`,

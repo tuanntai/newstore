@@ -1,18 +1,21 @@
-import { Typography, Form, Input, Button } from 'antd'
+import { Typography, Form, Input, Button, notification, Spin } from 'antd'
+import { LoadingOutlined } from '@ant-design/icons'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './SignIn.less'
 import { ILoginForm } from './interface'
-import { getAccessToken, setAccessToken } from '../../utils/localStorageService'
-import { useAppDispatch } from '../../redux/hook'
+import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { authLogin } from '../../redux/actions/auth/auth'
+import { authSelectors, resetProgress } from '../../redux/reducer/authReducer'
 
 const SignIn: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { Title } = Typography
   const [form] = Form.useForm<ILoginForm>()
-  const accessToken = getAccessToken()
+  const accessToken = useAppSelector(authSelectors.accessTokenSelector)
+  const message = useAppSelector(authSelectors.authMessageSelector)
+  const [loadingProgress, setLoadingProgress] = useState(false)
   const [fields, setFields] = useState([
     { name: 'email', value: '' },
     { name: 'password', value: '' }
@@ -24,7 +27,16 @@ const SignIn: React.FC = () => {
     }
   }, [accessToken, navigate])
 
+  useEffect(() => {
+    if (message) {
+      notification.error({ message: message })
+      setLoadingProgress(false)
+      dispatch(resetProgress())
+    }
+  }, [message])
+
   const handleLogin = () => {
+    setLoadingProgress(true)
     form.validateFields().then((values) => {
       dispatch(
         authLogin({
@@ -32,10 +44,6 @@ const SignIn: React.FC = () => {
           password: values.password
         })
       )
-      setFields([
-        { name: 'email', value: '' },
-        { name: 'password', value: '' }
-      ])
     })
   }
 
@@ -57,7 +65,7 @@ const SignIn: React.FC = () => {
           <Form.Item name="password" label="Password" rules={[{ required: true }]}>
             <Input type="password" />
           </Form.Item>
-          <Button type="primary" htmlType="submit" className="submit">
+          <Button type="primary" htmlType="submit" className="submit" loading={loadingProgress}>
             Submit
           </Button>
         </Form>

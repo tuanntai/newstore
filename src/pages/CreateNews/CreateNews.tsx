@@ -1,16 +1,16 @@
-import { Modal, Select, Upload } from 'antd'
+import { Modal, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
 import { Button, Typography, Form, Input, Switch, notification } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import './CreateNews.less'
 import { ENewsStatus } from '../../api/news/interface'
-import { postNews, uploadThumbnail } from '../../redux/actions/news/news'
+import { postNews } from '../../redux/actions/news/news'
 import { newsSelector, resetNewsProgress } from '../../redux/reducer/news/newsReducer'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { QUILL_MODULES, QUILL_FORMATS } from './constant'
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
+import UploadFile from '../../component/UploadFile/UploadFile'
 
 const CreateNews: React.FC = () => {
   const { Option } = Select
@@ -20,25 +20,14 @@ const CreateNews: React.FC = () => {
   const [postStatus, setPostStatus] = useState<ENewsStatus>(ENewsStatus.PUBLIC)
   const errorMessage = useAppSelector(newsSelector.newsErrorSelector)
   const progress = useAppSelector(newsSelector.newsProgressSelector)
-  const [imgUrl, setImgUrl] = useState('')
   const [form] = Form.useForm()
   const [contentText, setContentText] = useState('')
-  const thumbnailImage = useAppSelector(newsSelector.thumbnailSelector)
-  const [loadingImage, setLoadingImage] = useState(false)
+  const [thumbnailImage, setThumbnailImage] = useState('')
   const [newsFields, setNewsFields] = useState([
     { name: 'title', value: '' },
-    { name: 'excerpt', value: '' },
-    { name: 'file', value: null }
+    { name: 'excerpt', value: '' }
   ])
 
-  const uploadButton = (
-    <div>
-      {loadingImage ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  )
-
-  /////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     dispatch(setCurrentPage('Create News'))
     dispatch(resetNewsProgress())
@@ -58,15 +47,6 @@ const CreateNews: React.FC = () => {
     dispatch(resetNewsProgress())
   }, [progress, errorMessage, dispatch])
 
-  const beforeUpload = (file: any) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-    if (!isJpgOrPng) {
-      notification.error({ message: 'You can only upload JPG/PNG file!' })
-    }
-
-    return isJpgOrPng
-  }
-
   const handleSubmit = () => {
     setShowModal(!showModal)
     form.validateFields().then((value) => {
@@ -74,36 +54,19 @@ const CreateNews: React.FC = () => {
         tittle: value.title,
         excerpt: value.excerpt,
         content: contentText,
-        imgUrl: imgUrl,
+        imgUrl: thumbnailImage,
         isPinned: !isPin,
         status: postStatus
       }
       dispatch(postNews(createParam))
       setNewsFields([
         { name: 'title', value: '' },
-        { name: 'excerpt', value: '' },
-        { name: 'file', value: null }
+        { name: 'excerpt', value: '' }
       ])
       setContentText('')
-      setImgUrl('')
+      setThumbnailImage('')
     })
   }
-
-  const handleFileChange = (info: any) => {
-    if (info.file.status === 'uploading') {
-      setLoadingImage(true)
-      return
-    }
-    if (info.file.status === 'done') {
-      let formData = new FormData()
-      console.log(info.file.originFileObj)
-      formData.append('upload', info.file.originFileObj)
-      dispatch(uploadThumbnail(formData))
-      setLoadingImage(false)
-    }
-  }
-
-  /////////////////////////////////////////////////////////////////////////
 
   const handleContentChange = (value: string) => {
     setContentText(value)
@@ -121,7 +84,6 @@ const CreateNews: React.FC = () => {
     setPostStatus(value)
   }
 
-  //////////////////////////////////////////////////////////////
   return (
     <Form
       name="basic"
@@ -154,21 +116,7 @@ const CreateNews: React.FC = () => {
             <Typography className="title">Thumbnail</Typography>
           </div>
           <div className="upload-container">
-            <Upload
-              name="file"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList={false}
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              beforeUpload={beforeUpload}
-              onChange={handleFileChange}
-            >
-              {thumbnailImage ? (
-                <img src={thumbnailImage} alt="thumbnail" style={{ width: '100%' }} />
-              ) : (
-                uploadButton
-              )}
-            </Upload>
+            <UploadFile imgUrl={thumbnailImage} setImgUrl={setThumbnailImage} />
           </div>
           <div className="pin-container">
             <Typography>Pin :</Typography>
