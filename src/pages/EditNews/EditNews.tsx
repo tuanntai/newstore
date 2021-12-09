@@ -5,15 +5,16 @@ import { Button, Typography, Form, Input, notification } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import '../CreateNews/CreateNews.less'
 import { ENewsStatus } from '../../api/news/interface'
-import { editNews } from '../../redux/actions/news/news'
+import { editNews, getNewsById } from '../../redux/actions/news/news'
 import { newsSelector, resetNewsProgress } from '../../redux/reducer/news/newsReducer'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { QUILL_MODULES, QUILL_FORMATS } from '../CreateNews/constant'
 import UploadFile from '../../component/UploadFile/UploadFile'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const EditNews: React.FC = () => {
+  const { id } = useParams()
   const { Option } = Select
   const [form] = Form.useForm()
   const navigate = useNavigate()
@@ -35,10 +36,15 @@ const EditNews: React.FC = () => {
   useEffect(() => {
     dispatch(setCurrentPage('Edit News'))
     dispatch(resetNewsProgress())
-    setContentText(newsInfo.content)
-    setImgUrl(newsInfo.imgUrl)
-  }, [dispatch])
+    dispatch(getNewsById(Number(id)))
+  }, [])
 
+  useEffect(() => {
+    if (newsInfo) {
+      setContentText(newsInfo.content)
+      setImgUrl(newsInfo.imgUrl)
+    }
+  }, [newsInfo])
   useEffect(() => {
     if (progress === false && errorMessage) {
       notification.error({

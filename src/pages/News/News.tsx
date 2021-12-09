@@ -5,7 +5,6 @@ import { Button, Typography, Modal, notification } from 'antd'
 import {
   deleteNewsById,
   getDraft,
-  getNewsById,
   getPinnedNews,
   getPublished
 } from '../../redux/actions/news/news'
@@ -60,7 +59,6 @@ const News: React.FC = () => {
 
   const handleEdit = (id: number) => {
     dispatch(setNewsId(id))
-    dispatch(getNewsById(id))
     navigate(`edit-news/${id}`)
   }
 
@@ -166,11 +164,16 @@ const News: React.FC = () => {
       title: t`Action`,
       dataIndex: 'action',
       key: 'action',
-      width: '100px',
+      width: '150px',
       render: (record: any, action: INews) => (
-        <Button className="delete-button" onClick={() => handleDelete(action.id)}>
-          Delete
-        </Button>
+        <div className="button-box">
+          <Button className="edit-button" type="primary" onClick={() => handleEdit(action.id)}>
+            Edit
+          </Button>
+          <Button className="delete-button" onClick={() => handleDelete(action.id)}>
+            Delete
+          </Button>
+        </div>
       )
     }
   ]
