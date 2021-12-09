@@ -17,34 +17,19 @@ const Navbar = () => {
   }
 
   const navigate = useNavigate()
-  useEffect(() => {
-    switch (selectedKey) {
-      case '1': {
-        return navigate('/')
-      }
-      case '2': {
-        return navigate('/news')
-      }
-      case '3': {
-        return navigate('/news/create-news')
-      }
-      default: {
-        return navigate('/')
-      }
-    }
-  }, [selectedKey, navigate])
+
+  const handleLinkClick = (link: string) => {
+    navigate(link)
+  }
 
   return (
     <div className="navbar-menu">
       <Menu mode="inline" onClick={handleClick} theme="dark" defaultSelectedKeys={['1']}>
-        <Menu.Item icon={<HomeOutlined />} key="1">
+        <Menu.Item icon={<HomeOutlined />} key="1" onClick={() => handleLinkClick('/')}>
           <span>Home</span>
         </Menu.Item>
-        <Menu.Item icon={<HomeOutlined />} key="2">
+        <Menu.Item icon={<HomeOutlined />} key="2" onClick={() => handleLinkClick('news')}>
           <span>News</span>
-        </Menu.Item>
-        <Menu.Item icon={<HomeOutlined />} key="3">
-          <span>Create News</span>
         </Menu.Item>
 
         <Menu.Item key="6" onClick={handleDisconnect} icon={<LogoutOutlined />}>

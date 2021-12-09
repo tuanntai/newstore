@@ -11,10 +11,12 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { QUILL_MODULES, QUILL_FORMATS } from '../CreateNews/constant'
 import UploadFile from '../../component/UploadFile/UploadFile'
+import { useNavigate } from 'react-router-dom'
 
 const EditNews: React.FC = () => {
   const { Option } = Select
   const [form] = Form.useForm()
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [imgUrl, setImgUrl] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -33,6 +35,8 @@ const EditNews: React.FC = () => {
   useEffect(() => {
     dispatch(setCurrentPage('Edit News'))
     dispatch(resetNewsProgress())
+    setContentText(newsInfo.content)
+    setImgUrl(newsInfo.imgUrl)
   }, [dispatch])
 
   useEffect(() => {
@@ -41,12 +45,13 @@ const EditNews: React.FC = () => {
         message: errorMessage,
         placement: 'topRight'
       })
-    } else if (progress)
+    } else if (progress) {
       notification.success({
         message: `Successfully`,
         placement: 'topRight'
       })
-    dispatch(resetNewsProgress())
+      navigate(-1)
+    }
   }, [progress, errorMessage, dispatch])
 
   const handleSubmit = () => {
@@ -105,9 +110,7 @@ const EditNews: React.FC = () => {
           <Form.Item label="content">
             <ReactQuill
               value={contentText}
-              defaultValue={newsInfo.content}
               onChange={handleContentChange}
-              placeholder="Write Something..."
               theme="snow"
               formats={QUILL_FORMATS}
               modules={QUILL_MODULES}
