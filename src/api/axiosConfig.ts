@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { getAccessToken } from '../utils/localStorageService'
 
 const axiosConfig = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
@@ -8,6 +9,10 @@ const axiosConfig = axios.create({
 })
 axiosConfig.interceptors.request.use(
   function (config: AxiosRequestConfig) {
+    const accessToken = getAccessToken()
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`
+    }
     return config
   },
   function (error) {

@@ -5,7 +5,6 @@ import { Button, Typography, Modal, notification } from 'antd'
 import {
   deleteNewsById,
   getDraft,
-  getNewsById,
   getPinnedNews,
   getPublished
 } from '../../redux/actions/news/news'
@@ -17,6 +16,7 @@ import ListTable from '../../component/ListTable/ListTable'
 import './News.less'
 import { format } from 'date-fns'
 import { useNavigate } from 'react-router'
+import { Link } from 'react-router-dom'
 
 const News: React.FC = () => {
   let navigate = useNavigate()
@@ -59,8 +59,7 @@ const News: React.FC = () => {
 
   const handleEdit = (id: number) => {
     dispatch(setNewsId(id))
-    dispatch(getNewsById(id))
-    navigate(`news/edit-news/${id}`)
+    navigate(`edit-news/${id}`)
   }
 
   const deleteNews = (id: number) => {
@@ -73,9 +72,7 @@ const News: React.FC = () => {
     setShowEditModal(false)
   }
 
-  const handleCreate = () => {
-    navigate('create-news')
-  }
+  const handleCreate = () => {}
 
   const pinnedColumn = [
     {
@@ -167,11 +164,16 @@ const News: React.FC = () => {
       title: t`Action`,
       dataIndex: 'action',
       key: 'action',
-      width: '100px',
+      width: '150px',
       render: (record: any, action: INews) => (
-        <Button className="delete-button" onClick={() => handleDelete(action.id)}>
-          Delete
-        </Button>
+        <div className="button-box">
+          <Button className="edit-button" type="primary" onClick={() => handleEdit(action.id)}>
+            Edit
+          </Button>
+          <Button className="delete-button" onClick={() => handleDelete(action.id)}>
+            Delete
+          </Button>
+        </div>
       )
     }
   ]
@@ -180,9 +182,11 @@ const News: React.FC = () => {
     <div className="news-wrapper">
       <div className="heading">
         <Typography className="heading-title">News List</Typography>
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
-          Create Task
-        </Button>
+        <Link to="create-news">
+          <Button type="primary" icon={<PlusOutlined />}>
+            Create Task
+          </Button>
+        </Link>
       </div>
       <ListTable
         title="Pinned News"
