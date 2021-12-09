@@ -11,6 +11,7 @@ axiosConfig.interceptors.request.use(
   function (config: AxiosRequestConfig) {
     const accessToken = getAccessToken()
     if (accessToken) {
+      config.headers = config.headers ? config.headers : {}
       config.headers['Authorization'] = `Bearer ${accessToken}`
     }
     return config
