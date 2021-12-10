@@ -24,7 +24,9 @@ const initialState: INewsState = {
     tittle: '',
     id: 0,
     content: '',
-    excerpt: ''
+    excerpt: '',
+    alias: '',
+    isPinned: false
   },
   draftNews: [],
   pinnedNews: [],

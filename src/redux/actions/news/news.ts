@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {
   INews,
-  INewsById,
+  INewsByAlias,
   INewsEditRequest,
   IPinnedNews,
   IPostNewsRequest,
@@ -78,7 +78,7 @@ export const getPublishedNews = createAsyncThunk(
   }
 )
 
-export const getNewsById = createAsyncThunk<INewsById, number>(
+export const getNewsById = createAsyncThunk<INewsByAlias, number>(
   'news/getNewsById',
   async (id: number, { rejectWithValue }) => {
     const response = await getNewsByIdApi(id)
@@ -89,13 +89,10 @@ export const getNewsById = createAsyncThunk<INewsById, number>(
   }
 )
 
-export const deleteNewsById = createAsyncThunk(
-  'news/deleteNewsById',
-  async (id: number, { rejectWithValue }) => {
-    const response = await deleteNewsByIdApi(id)
-    return response
-  }
-)
+export const deleteNewsById = createAsyncThunk('news/deleteNewsById', async (id: number) => {
+  const response = await deleteNewsByIdApi(id)
+  return response
+})
 
 export const uploadThumbnail = createAsyncThunk('news/uploadThumbnail', async (file: any) => {
   const response = await uploadThumbnailApi(file)

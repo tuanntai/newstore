@@ -1,8 +1,20 @@
 export const NEWS_API_URLS = {
   postNews: '/news',
+  getNews: (
+    page: number,
+    sortby: {
+      timeCreated: string
+    },
+    order: string
+  ) => {
+    return `/news?page=${page}&sortBy=${sortby}&order=${order}`
+  },
   getPublished: '/news/published',
   getDraft: '/news/draft',
   getPinnedNews: '/news/pinnedNews',
+  getNewsByAlias: (alias: string) => {
+    return `/news/${alias}`
+  },
   getNewsById: (id: number) => {
     return `/news/${id}`
   },

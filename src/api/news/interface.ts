@@ -29,6 +29,10 @@ export interface IPinnedNews {
   tittle: string
   imgUrl: string
   excerpt: string
+  isPinned: boolean
+  timeCreated: string
+  timeModified: string
+  alias: string
 }
 
 export interface INews {
@@ -43,7 +47,7 @@ export interface INews {
   tittle: string
 }
 
-export interface INewsById {
+export interface INewsByAlias {
   id: number
   tittle: string
   content: string
@@ -51,6 +55,8 @@ export interface INewsById {
   imgUrl: string
   timeCreated: string
   timeModified: string
+  alias: string
+  isPinned: boolean
 }
 
 export interface INewsEditRequest {

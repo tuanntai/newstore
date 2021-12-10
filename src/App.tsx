@@ -10,7 +10,10 @@ import News from './pages/News/News'
 import CreateNews from './pages/CreateNews/CreateNews'
 import EditNews from './pages/EditNews/EditNews'
 import NotFound from './pages/NotFound/NotFound'
-function App() {
+import { getAccessToken } from './utils/localStorageService'
+
+const App = () => {
+  const accessToken = getAccessToken();
   return (
     <Provider store={store}>
       <div className="App">
