@@ -1,9 +1,9 @@
-import { INews, INewsById, IPinnedNews, IPostNewsResponse } from '../../../api/news/interface'
+import { INews, INewsByAlias, IPinnedNews, IPostNewsResponse } from '../../../api/news/interface'
 
 export interface INewsState {
   thumbnailUrl: string
   newsId: number
-  newsInfo: INewsById
+  newsInfo: INewsByAlias
   publishedNews: INews[]
   draftNews: INews[]
   pinnedNews: IPinnedNews[]

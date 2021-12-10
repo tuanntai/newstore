@@ -1,7 +1,7 @@
 import { IDataError } from '../../utils/apiErrorService'
 import { deleteApi, getApi, patchApi, postApi } from '../../utils/apiHelper'
 import { NEWS_API_URLS } from '../apiUrls'
-import { INews, INewsById, IPinnedNews, IPostNewsRequest, IPostNewsResponse } from './interface'
+import { INews, INewsByAlias, IPinnedNews, IPostNewsRequest, IPostNewsResponse } from './interface'
 
 export const getPublishedApi = async () => {
   const data = await getApi<INews[]>(NEWS_API_URLS.getPublished)
@@ -45,8 +45,12 @@ export const getPublishedNewsApi = async (page: number) => {
   return data
 }
 
+export const getNewsByAliasApi = async (alias: string) => {
+  const data = await getApi<INewsByAlias>(NEWS_API_URLS.getNewsByAlias(alias))
+  return data
+}
 export const getNewsByIdApi = async (id: number) => {
-  const data = await getApi<INewsById>(NEWS_API_URLS.getNewsById(id))
+  const data = await getApi<INewsByAlias>(NEWS_API_URLS.getNewsById(id))
   return data
 }
 
@@ -56,7 +60,6 @@ export const deleteNewsByIdApi = async (id: number) => {
 }
 
 export const uploadThumbnailApi = async (file: any) => {
-  console.log(file)
   const data = await postApi(NEWS_API_URLS.uploadThumbnail, file, {
     headers: {
       'Content-Type': 'multipart/form-data'

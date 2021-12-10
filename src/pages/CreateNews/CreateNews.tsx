@@ -7,10 +7,8 @@ import './CreateNews.less'
 import { ENewsStatus } from '../../api/news/interface'
 import { postNews } from '../../redux/actions/news/news'
 import { newsSelector, resetNewsProgress } from '../../redux/reducer/news/newsReducer'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
-import { QUILL_MODULES, QUILL_FORMATS } from './constant'
 import UploadFile from '../../component/UploadFile/UploadFile'
+import Editor from '../../component/Editor/Editor'
 
 const CreateNews: React.FC = () => {
   const { Option } = Select
@@ -55,7 +53,7 @@ const CreateNews: React.FC = () => {
         excerpt: value.excerpt,
         content: contentText,
         imgUrl: thumbnailImage,
-        isPinned: !isPin,
+        isPinned: postStatus === ENewsStatus.DRAFT ? false : isPin,
         status: postStatus
       }
       dispatch(postNews(createParam))
@@ -66,10 +64,6 @@ const CreateNews: React.FC = () => {
       setContentText('')
       setThumbnailImage('')
     })
-  }
-
-  const handleContentChange = (value: string) => {
-    setContentText(value)
   }
 
   const handleSetPin = () => {
@@ -101,14 +95,7 @@ const CreateNews: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item label="content">
-            <ReactQuill
-              value={contentText}
-              onChange={handleContentChange}
-              placeholder="Write Something..."
-              theme="snow"
-              formats={QUILL_FORMATS}
-              modules={QUILL_MODULES}
-            />
+            <Editor contentText={contentText} setContentText={setContentText} />
           </Form.Item>
         </div>
         <div className="right">
@@ -118,10 +105,7 @@ const CreateNews: React.FC = () => {
           <div className="upload-container">
             <UploadFile imgUrl={thumbnailImage} setImgUrl={setThumbnailImage} />
           </div>
-          <div className="pin-container">
-            <Typography>Pin :</Typography>
-            <Switch defaultChecked onChange={handleSetPin} />
-          </div>
+
           <div className="select-container">
             <Typography>Select Type:</Typography>
             <Select
@@ -133,6 +117,12 @@ const CreateNews: React.FC = () => {
               <Option value={ENewsStatus.DRAFT}>Draft</Option>
             </Select>
           </div>
+          {postStatus === ENewsStatus.PUBLIC && (
+            <div className="pin-container">
+              <Typography>Pin :</Typography>
+              <Switch onChange={handleSetPin} />
+            </div>
+          )}
           <div className="button-container">
             <Button
               type="primary"
