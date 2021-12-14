@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './reducer/authReducer'
 import navigateReducer from './reducer/navigateReducer'
 import newsReducer from './reducer/news/newsReducer'
+import termPolicyReduces from './reducer/termPolicy/termPolicyReduces'
 const reducer = {
   auth: authReducer,
   navigate: navigateReducer,
-  news: newsReducer
+  news: newsReducer,
+  termPolicy: termPolicyReduces
 }
 
 const store = configureStore({

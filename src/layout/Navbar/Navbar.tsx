@@ -31,6 +31,9 @@ const Navbar = () => {
         <Menu.Item icon={<HomeOutlined />} key="2" onClick={() => handleLinkClick('news')}>
           <span>News</span>
         </Menu.Item>
+        <Menu.Item icon={<HomeOutlined />} key="3" onClick={() => handleLinkClick('termPolicy')}>
+          <span>Term Policy</span>
+        </Menu.Item>
 
         <Menu.Item key="6" onClick={handleDisconnect} icon={<LogoutOutlined />}>
           <span>Logout</span>
