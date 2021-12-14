@@ -34,3 +34,15 @@ export const USER_API_URL = {
 export const AUTH_API_URL = {
   authLogin: '/auth/login'
 }
+
+export const TERM_POLICY_API_URL = {
+  postTerm: '/term-policy/term',
+  getTerm: '/term-policy',
+  getTermById: (id: number) => {
+    return `/term-policy/term/${id}`
+  },
+  postPolicy: '/term-policy/policy',
+  getPolicyById: (id: number) => {
+    return `/term-policy/policy/${id}`
+  },
+}

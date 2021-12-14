@@ -11,9 +11,10 @@ import CreateNews from './pages/CreateNews/CreateNews'
 import EditNews from './pages/EditNews/EditNews'
 import NotFound from './pages/NotFound/NotFound'
 import { getAccessToken } from './utils/localStorageService'
+import TermPolicy from './pages/TermPolicy/TermPolicy'
 
 const App = () => {
-  const accessToken = getAccessToken();
+  const accessToken = getAccessToken()
   return (
     <Provider store={store}>
       <div className="App">
@@ -25,6 +26,7 @@ const App = () => {
               <Route path="news/" element={<News />} />
               <Route path="news/create-news" element={<CreateNews />} />
               <Route path="news/edit-news/:id" element={<EditNews />} />
+              <Route path="termPolicy" element={<TermPolicy />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

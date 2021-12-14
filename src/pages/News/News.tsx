@@ -72,8 +72,6 @@ const News: React.FC = () => {
     setShowEditModal(false)
   }
 
-  const handleCreate = () => {}
-
   const pinnedColumn = [
     {
       title: t`ID`,
