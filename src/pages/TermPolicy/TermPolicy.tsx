@@ -4,7 +4,7 @@ import { Button, Modal, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ListTable from '../../component/ListTable/ListTable'
-import { getTerm } from '../../redux/actions/termPolicy/termPolicy'
+import { getPolicy, getTerm } from '../../redux/actions/termPolicy/termPolicy'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
 import { termPolicySelector } from '../../redux/reducer/termPolicy/termPolicyReduces'
@@ -14,11 +14,8 @@ const TermPolicy: React.FC = () => {
   const dispatch = useAppDispatch()
   const termList = useAppSelector(termPolicySelector.termListSelector)
   const policyList = useAppSelector(termPolicySelector.policyListSelector)
-  const [Terms, setTerms] = useState([
-    { name: 'title', value: '' },
-    { name: 'description', value: '' }
-  ])
-
+  console.log(policyList);
+  
   const column = [
     {
       title: t`ID`,
@@ -33,74 +30,51 @@ const TermPolicy: React.FC = () => {
       key: 'title',
     },
     {
-      title: t`Description`,
-      dataIndex: 'description',
-      key: 'description',
+      title: t`Content`,
+      dataIndex: 'content',
+      key: 'content',
     }
   ]
-
-  const [isModalVisible, setIsModalVisible] = useState(false)
-  const [isTerm, setIsTerm] = useState(false)
-
-  const showModal = (isTerm: boolean) => {
-    setIsModalVisible(true)
-  }
-
-  const handleOk = () => {
-    setIsModalVisible(false)
-  }
-
-  const handleCancel = () => {
-    setIsModalVisible(false)
-  }
 
   useEffect(() => {
     dispatch(setCurrentPage('Term Policy'))
     dispatch(getTerm())
+    dispatch(getPolicy())
   }, [])
-
 
   return (
     <div className="termPolicy-wrapper">
       <div className="heading">
         <Typography className="heading-title">Term</Typography>
         <Link to="create-termPolicy">
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(true)}>
+          <Button type="primary" icon={<PlusOutlined />} >
             Create Term
           </Button>
         </Link>
       </div>
       <ListTable
         title="List Of Terms"
-        dataSource={termList}
+        dataSource={[termList]}
         pagination={false}
         columns={column}
-        scroll={{ x: 'auto  ' }}
+        scroll={{ x: 'auto' }}
       />
       <br />
       <div className="heading">
         <Typography className="heading-title">Policy</Typography>
         <Link to="create-termPolicy">
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(false)}>
+        <Button type="primary" icon={<PlusOutlined />} >
           Create Policy
         </Button>
         </Link>
       </div>
       <ListTable
         title="List Of Policy"
-        dataSource={policyList}
+        dataSource={[policyList]}
         pagination={false}
         columns={column}
         scroll={{ x: 'auto' }}
       />
-      <Modal
-        title={isTerm ? 'Create Term' : 'Create Policy'}
-        visible={isModalVisible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-      >
-        <Typography>{isTerm ? 'Term' : 'Policy'}</Typography>
-      </Modal>
     </div>
   )
 }

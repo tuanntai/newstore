@@ -4,7 +4,6 @@ import { setCurrentPage } from '../../redux/reducer/navigateReducer'
 import { Button, Typography, Form, Input, Switch, notification } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import './CreateTermPolicy.less'
-import { newsSelector, resetNewsProgress } from '../../redux/reducer/news/newsReducer'
 import Editor from '../../component/Editor/Editor'
 import { resetTermPolicyProgress, termPolicySelector } from '../../redux/reducer/termPolicy/termPolicyReduces'
 import { ETermPolicyStatus } from '../../api/termPolicy/interface'
@@ -19,7 +18,7 @@ const CreateTermPolicy: React.FC = () => {
   const progress = useAppSelector(termPolicySelector.termPolicyProgressSelector)
   const [form] = Form.useForm()
   const [contentText, setContentText] = useState('')
-  const [newsFields, setNewsFields] = useState([
+  const [termFields, setTermFields] = useState([
     { name: 'title', value: '' },
   ])
 
@@ -39,7 +38,7 @@ const CreateTermPolicy: React.FC = () => {
         message: `Successfully`,
         placement: 'topRight'
       })
-    dispatch(resetNewsProgress())
+    dispatch(resetTermPolicyProgress())
   }, [progress, errorMessage, dispatch])
 
   const handleSubmit = () => {
@@ -53,7 +52,7 @@ const CreateTermPolicy: React.FC = () => {
         dispatch(postPolicy(createParam))
       } else if (postStatus === ETermPolicyStatus.TERM)
       dispatch(postTerm(createParam))
-      setNewsFields([
+      setTermFields([
         { name: 'title', value: '' }
       ])
       setContentText('')
@@ -73,7 +72,7 @@ const CreateTermPolicy: React.FC = () => {
       name="basic"
       labelCol={{ span: 2 }}
       form={form}
-      fields={newsFields}
+      fields={termFields}
       onFinish={handleSubmit}
     >
       <div className="create-wrapper">

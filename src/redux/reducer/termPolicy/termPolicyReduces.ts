@@ -1,9 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
-import {
-  deletePolicy,
-  deleteTerm,
-  getTerm,
-} from '../../actions/termPolicy/termPolicy'
+import { deletePolicy, deleteTerm, getPolicy, getTerm } from '../../actions/termPolicy/termPolicy'
 import { ITermPolicyState } from '../../interface/termPolicy/termPolicy'
 import { ITermPolicy } from '../../../api/termPolicy/interface'
 import { RootState } from '../../store'
@@ -13,11 +9,11 @@ const initialState: ITermPolicyState = {
   policy: [],
   termInfo: {
     title: '',
-    content: '',
+    content: ''
   },
   policyInfo: {
     title: '',
-    content: '',
+    content: ''
   },
   id: 0,
   loading: false,
@@ -47,6 +43,18 @@ const termPolicySlice = createSlice({
         state.term = action.payload
       })
       .addCase(getTerm.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+      })
+    builder
+      .addCase(getPolicy.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPolicy.fulfilled, (state, action) => {
+        state.loading = false
+        state.policy = action.payload
+      })
+      .addCase(getPolicy.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload as string
       })
