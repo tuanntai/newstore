@@ -8,54 +8,44 @@ export const getTermApi = async () => {
   return data
 }
 
-export const getTermByIdApi = async (id: number) => {
-  const data = await getApi<ITermPolicy[]>(TERM_POLICY_API_URL.getTermById(id))
+export const getPolicyApi = async () => {
+  const data = await getApi<ITermPolicy[]>(TERM_POLICY_API_URL.getPolicy)
   return data
 }
 
-export const getPolicyByIdApi = async (id: number) => {
-  const data = await getApi<ITermPolicy[]>(TERM_POLICY_API_URL.getPolicyById(id))
-  return data
-}
-
-export const postTermApi = async ({ id, title, description }: ITermPolicyPost) => {
+export const postTermApi = async ({ id, title, content }: ITermPolicyPost) => {
   const data = await postApi<ITermPolicyPost, ITermPolicy | IDataError>(
-    TERM_POLICY_API_URL.postTerm,
-    { id, title, description }
+    TERM_POLICY_API_URL.createTerm,
+    { id, title, content }
   )
   return data
 }
 
-export const postPolicyApi = async ({ id, title, description }: ITermPolicyPost) => {
+export const postPolicyApi = async ({ id, title, content }: ITermPolicyPost) => {
   const data = await postApi<ITermPolicyPost, ITermPolicy | IDataError>(
-    TERM_POLICY_API_URL.postPolicy,
-    { id, title, description }
+    TERM_POLICY_API_URL.createPolicy,
+    { id, title, content }
   )
   return data
 }
 
-export const editTermApi = async ({ id, title, description }: ITermPolicy) => {
-  const data = await patchApi<ITermPolicy, number | IDataError>(
-    TERM_POLICY_API_URL.getTermById(id),
-    { id, title, description }
-  )
+export const editTermApi = async (id: number, editedData: any) => {
+  const data = await patchApi(TERM_POLICY_API_URL.updateTerm(id), editedData)
   return data
 }
 
-export const editPolicyApi = async ({ id, title, description }: ITermPolicy) => {
-  const data = await patchApi<ITermPolicy, number | IDataError>(
-    TERM_POLICY_API_URL.getPolicyById(id),
-    { id, title, description }
-  )
+
+export const editPolicyApi = async (id: number, editedData: any) => {
+  const data = await patchApi(TERM_POLICY_API_URL.updatePolicy(id), editedData)
   return data
 }
 
 export const deleteTermApi = async (id: number) => {
-  const data = await deleteApi<number>(TERM_POLICY_API_URL.getTermById(id))
+  const data = await deleteApi<IDataError>(TERM_POLICY_API_URL.removeTerm(id))
   return data
 }
 
 export const deletePolicyApi = async (id: number) => {
-  const data = await deleteApi<number>(TERM_POLICY_API_URL.getTermById(id))
+  const data = await deleteApi<IDataError>(TERM_POLICY_API_URL.removePolicy(id))
   return data
 }

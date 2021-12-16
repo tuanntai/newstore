@@ -1,12 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
-import { id } from 'date-fns/locale'
-import {
-  deletePolicy,
-  deleteTerm,
-  getPolicyById,
-  getTerm,
-  getTermByID
-} from '../../actions/termPolicy/termPolicy'
+import { deletePolicy, deleteTerm, getPolicy, getTerm } from '../../actions/termPolicy/termPolicy'
 import { ITermPolicyState } from '../../interface/termPolicy/termPolicy'
 import { ITermPolicy } from '../../../api/termPolicy/interface'
 import { RootState } from '../../store'
@@ -16,13 +9,11 @@ const initialState: ITermPolicyState = {
   policy: [],
   termInfo: {
     title: '',
-    description: '',
-    id: 0
+    content: ''
   },
   policyInfo: {
     title: '',
-    description: '',
-    id: 0
+    content: ''
   },
   id: 0,
   loading: false,
@@ -56,26 +47,14 @@ const termPolicySlice = createSlice({
         state.error = action.payload as string
       })
     builder
-      .addCase(getTermByID.pending, (state) => {
+      .addCase(getPolicy.pending, (state) => {
         state.loading = true
       })
-      .addCase(getTermByID.fulfilled, (state, action) => {
+      .addCase(getPolicy.fulfilled, (state, action) => {
         state.loading = false
-        state.termInfo = action.payload as ITermPolicy
+        state.policy = action.payload
       })
-      .addCase(getTermByID.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload as string
-      })
-    builder
-      .addCase(getPolicyById.pending, (state) => {
-        state.loading = true
-      })
-      .addCase(getPolicyById.fulfilled, (state, action) => {
-        state.loading = false
-        state.policyInfo = action.payload as ITermPolicy
-      })
-      .addCase(getPolicyById.rejected, (state, action) => {
+      .addCase(getPolicy.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload as string
       })
@@ -86,7 +65,7 @@ const termPolicySlice = createSlice({
       .addCase(deleteTerm.fulfilled, (state, action) => {
         state.loading = false
         state.success = true
-        state.term = state.term.filter((item: ITermPolicy) => item.id !== action.payload)
+        state.term = state.term.filter((item: ITermPolicy) => item !== action.payload)
       })
       .addCase(deleteTerm.rejected, (state, action) => {
         state.loading = false
@@ -99,7 +78,7 @@ const termPolicySlice = createSlice({
       .addCase(deletePolicy.fulfilled, (state, action) => {
         state.loading = false
         state.success = true
-        state.policy = state.policy.filter((item: ITermPolicy) => item.id !== action.payload)
+        state.policy = state.policy.filter((item: ITermPolicy) => item !== action.payload)
       })
       .addCase(deletePolicy.rejected, (state, action) => {
         state.loading = false
@@ -109,11 +88,17 @@ const termPolicySlice = createSlice({
 })
 
 const selectSelf = (state: RootState) => state.termPolicy
-
+const termPolicyProgressSelector = createSelector(selectSelf, (state) => state.success)
+const termPolicyErrorSelector = createSelector(selectSelf, (state) => state.error)
 const termListSelector = createSelector(selectSelf, (state) => state.term)
+const policyListSelector = createSelector(selectSelf, (state) => state.policy)
 
 export const termPolicySelector = {
-  termListSelector
+  termListSelector,
+  termPolicyProgressSelector,
+  termPolicyErrorSelector,
+  policyListSelector
 }
+export const { resetTermPolicyProgress } = termPolicySlice.actions
 
 export default termPolicySlice.reducer

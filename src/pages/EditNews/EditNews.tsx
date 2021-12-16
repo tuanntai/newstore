@@ -49,7 +49,7 @@ const EditNews: React.FC = () => {
       setContentText(newsInfo.content)
       setImgUrl(newsInfo.imgUrl)
       setNewsFields([
-        { name: 'title', value: newsInfo.tittle },
+        { name: 'title', value: newsInfo.title },
         { name: 'excerpt', value: newsInfo.excerpt }
       ])
     }
@@ -69,7 +69,7 @@ const EditNews: React.FC = () => {
     setShowModal(!showModal)
     form.validateFields().then((value) => {
       const createParam = {
-        tittle: value.title,
+        title: value.title,
         excerpt: value.excerpt,
         content: contentText,
         imgUrl: imgUrl,
