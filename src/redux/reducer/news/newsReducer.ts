@@ -21,7 +21,7 @@ const initialState: INewsState = {
     timeCreated: '',
     timeModified: '',
     imgUrl: '',
-    tittle: '',
+    title: '',
     id: 0,
     content: '',
     excerpt: '',

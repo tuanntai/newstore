@@ -3,32 +3,29 @@ import React, { useEffect, useState } from 'react'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
 import { Button, Typography, Form, Input, Switch, notification } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
-import './CreateNews.less'
-import { ENewsStatus } from '../../api/news/interface'
-import { postNews } from '../../redux/actions/news/news'
+import './CreateTermPolicy.less'
 import { newsSelector, resetNewsProgress } from '../../redux/reducer/news/newsReducer'
-import UploadFile from '../../component/UploadFile/UploadFile'
 import Editor from '../../component/Editor/Editor'
+import { resetTermPolicyProgress, termPolicySelector } from '../../redux/reducer/termPolicy/termPolicyReduces'
+import { ETermPolicyStatus } from '../../api/termPolicy/interface'
+import { postPolicy, postTerm } from '../../redux/actions/termPolicy/termPolicy'
 
-const CreateNews: React.FC = () => {
+const CreateTermPolicy: React.FC = () => {
   const { Option } = Select
   const dispatch = useAppDispatch()
-  const [isPin, setIsPin] = useState(false)
   const [showModal, setShowModal] = useState(false)
-  const [postStatus, setPostStatus] = useState<ENewsStatus>(ENewsStatus.PUBLIC)
-  const errorMessage = useAppSelector(newsSelector.newsErrorSelector)
-  const progress = useAppSelector(newsSelector.newsProgressSelector)
+  const [postStatus, setPostStatus] = useState<ETermPolicyStatus>(ETermPolicyStatus.TERM)
+  const errorMessage = useAppSelector(termPolicySelector.termPolicyErrorSelector)
+  const progress = useAppSelector(termPolicySelector.termPolicyProgressSelector)
   const [form] = Form.useForm()
   const [contentText, setContentText] = useState('')
-  const [thumbnailImage, setThumbnailImage] = useState('')
   const [newsFields, setNewsFields] = useState([
     { name: 'title', value: '' },
-    { name: 'excerpt', value: '' }
   ])
 
   useEffect(() => {
-    dispatch(setCurrentPage('Create News'))
-    dispatch(resetNewsProgress())
+    dispatch(setCurrentPage('Create Term Policy'))
+    dispatch(resetTermPolicyProgress())
   }, [dispatch])
 
   useEffect(() => {
@@ -50,31 +47,24 @@ const CreateNews: React.FC = () => {
     form.validateFields().then((value) => {
       const createParam = {
         title: value.title,
-        excerpt: value.excerpt,
         content: contentText,
-        imgUrl: thumbnailImage,
-        isPinned: postStatus === ENewsStatus.DRAFT ? false : isPin,
-        status: postStatus
       }
-      dispatch(postNews(createParam))
+      if(postStatus === ETermPolicyStatus.POLICY){
+        dispatch(postPolicy(createParam))
+      } else if (postStatus === ETermPolicyStatus.TERM)
+      dispatch(postTerm(createParam))
       setNewsFields([
-        { name: 'title', value: '' },
-        { name: 'excerpt', value: '' }
+        { name: 'title', value: '' }
       ])
       setContentText('')
-      setThumbnailImage('')
     })
-  }
-
-  const handleSetPin = () => {
-    setIsPin(!isPin)
   }
 
   const handleCancel = () => {
     setShowModal(!showModal)
   }
 
-  const handleChangeType = (value: ENewsStatus) => {
+  const handleChangeType = (value: ETermPolicyStatus) => {
     setPostStatus(value)
   }
 
@@ -91,54 +81,39 @@ const CreateNews: React.FC = () => {
           <Form.Item name="title" label="title" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="excerpt" label="excerpt" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
           <Form.Item label="content">
             <Editor contentText={contentText} setContentText={setContentText} />
           </Form.Item>
         </div>
         <div className="right">
-          <div className="thumbnail-container">
-            <Typography className="title">Thumbnail</Typography>
-          </div>
-          <div className="upload-container">
-            <UploadFile imgUrl={thumbnailImage} setImgUrl={setThumbnailImage} />
-          </div>
 
           <div className="select-container">
             <Typography>Select Type:</Typography>
             <Select
-              defaultValue={ENewsStatus.PUBLIC}
+              defaultValue={ETermPolicyStatus.TERM}
               style={{ width: 120 }}
               onChange={handleChangeType}
             >
-              <Option value={ENewsStatus.PUBLIC}>Public</Option>
-              <Option value={ENewsStatus.DRAFT}>Draft</Option>
+              <Option value={ETermPolicyStatus.TERM}>Term</Option>
+              <Option value={ETermPolicyStatus.POLICY}>Policy</Option>
             </Select>
           </div>
-          {postStatus === ENewsStatus.PUBLIC && (
-            <div className="pin-container">
-              <Typography>Pin :</Typography>
-              <Switch onChange={handleSetPin} />
-            </div>
-          )}
           <div className="button-container">
             <Button
               type="primary"
               className="submit-button"
               onClick={() => setShowModal(!showModal)}
             >
-              {postStatus === ENewsStatus.DRAFT ? 'Save Draft' : 'Submit'}
+              {postStatus === ETermPolicyStatus.POLICY ? 'Save Policy' : 'Submit'}
             </Button>
           </div>
           <Modal
-            title={postStatus === ENewsStatus.DRAFT ? 'Save Draft' : 'Publish News'}
+            title={postStatus === ETermPolicyStatus.POLICY ? 'Save Policy' : 'Publish Term'}
             visible={showModal}
             onOk={handleSubmit}
             onCancel={handleCancel}
             cancelText="Cancel"
-            okText={postStatus === ENewsStatus.DRAFT ? 'Save' : 'Submit'}
+            okText={postStatus === ETermPolicyStatus.POLICY ? 'Save' : 'Submit'}
           >
             Are you sure ?
           </Modal>
@@ -148,4 +123,4 @@ const CreateNews: React.FC = () => {
   )
 }
 
-export default CreateNews
+export default CreateTermPolicy

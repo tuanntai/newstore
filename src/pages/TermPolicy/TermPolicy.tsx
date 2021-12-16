@@ -1,7 +1,8 @@
 import { PlusOutlined } from '@ant-design/icons'
 import { t } from '@lingui/macro'
-import { Button, Form, Modal, Typography } from 'antd'
+import { Button, Modal, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import ListTable from '../../component/ListTable/ListTable'
 import { getTerm } from '../../redux/actions/termPolicy/termPolicy'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
@@ -12,8 +13,8 @@ import './TermPolicy.less'
 const TermPolicy: React.FC = () => {
   const dispatch = useAppDispatch()
   const termList = useAppSelector(termPolicySelector.termListSelector)
-  const [form] = Form.useForm()
-  const [newsFields, setNewsFields] = useState([
+  const policyList = useAppSelector(termPolicySelector.policyListSelector)
+  const [Terms, setTerms] = useState([
     { name: 'title', value: '' },
     { name: 'description', value: '' }
   ])
@@ -27,14 +28,14 @@ const TermPolicy: React.FC = () => {
       render: (text: string) => <div key={text}>{text}</div>
     },
     {
-      title: t`Tittle`,
-      dataIndex: 'tittle',
-      key: 'tittle'
+      title: t`Title`,
+      dataIndex: 'title',
+      key: 'title',
     },
     {
       title: t`Description`,
       dataIndex: 'description',
-      key: 'description'
+      key: 'description',
     }
   ]
 
@@ -57,13 +58,17 @@ const TermPolicy: React.FC = () => {
     dispatch(setCurrentPage('Term Policy'))
     dispatch(getTerm())
   }, [])
+
+
   return (
     <div className="termPolicy-wrapper">
       <div className="heading">
         <Typography className="heading-title">Term</Typography>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(true)}>
-          Create Task
-        </Button>
+        <Link to="create-termPolicy">
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(true)}>
+            Create Term
+          </Button>
+        </Link>
       </div>
       <ListTable
         title="List Of Terms"
@@ -75,16 +80,18 @@ const TermPolicy: React.FC = () => {
       <br />
       <div className="heading">
         <Typography className="heading-title">Policy</Typography>
+        <Link to="create-termPolicy">
         <Button type="primary" icon={<PlusOutlined />} onClick={() => showModal(false)}>
           Create Policy
         </Button>
+        </Link>
       </div>
       <ListTable
         title="List Of Policy"
-        dataSource={termList}
+        dataSource={policyList}
         pagination={false}
         columns={column}
-        scroll={{ x: 'auto  ' }}
+        scroll={{ x: 'auto' }}
       />
       <Modal
         title={isTerm ? 'Create Term' : 'Create Policy'}

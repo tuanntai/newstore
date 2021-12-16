@@ -9,7 +9,7 @@ export const getPublishedApi = async () => {
 }
 
 export const postNewsApi = async ({
-  tittle,
+  title,
   excerpt,
   content,
   isPinned,
@@ -19,7 +19,7 @@ export const postNewsApi = async ({
   const data = await postApi<IPostNewsRequest, IPostNewsResponse | IDataError>(
     NEWS_API_URLS.postNews,
     {
-      tittle,
+      title,
       excerpt,
       content,
       isPinned,

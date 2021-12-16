@@ -4,7 +4,7 @@ export enum ENewsStatus {
 }
 
 export interface IPostNewsRequest {
-  tittle: string
+  title: string
   excerpt: string
   content: string
   isPinned: boolean
@@ -13,7 +13,7 @@ export interface IPostNewsRequest {
 }
 
 export interface IPostNewsResponse {
-  tittle: string
+  title: string
   excerpt: string
   content: string
   isPinned: boolean
@@ -26,7 +26,7 @@ export interface IPostNewsResponse {
 
 export interface IPinnedNews {
   id: number
-  tittle: string
+  title: string
   imgUrl: string
   excerpt: string
   isPinned: boolean
@@ -44,12 +44,12 @@ export interface INews {
   status: ENewsStatus
   timeCreated: string
   timeModified: string
-  tittle: string
+  title: string
 }
 
 export interface INewsByAlias {
   id: number
-  tittle: string
+  title: string
   content: string
   excerpt: string
   imgUrl: string

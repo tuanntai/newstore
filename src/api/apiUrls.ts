@@ -36,13 +36,20 @@ export const AUTH_API_URL = {
 }
 
 export const TERM_POLICY_API_URL = {
-  postTerm: '/term-policy/term',
-  getTerm: '/term-policy',
-  getTermById: (id: number) => {
+  createTerm: '/term-policy/term',
+  getTerm: '/term-policy/term',
+  updateTerm: (id: number) => {
     return `/term-policy/term/${id}`
   },
-  postPolicy: '/term-policy/policy',
-  getPolicyById: (id: number) => {
+  removeTerm: (id: number) => {
+    return `/term-policy/term/${id}`
+  },
+  createPolicy: '/term-policy/policy',
+  getPolicy: '/term-policy/policy',
+  updatePolicy: (id: number) => {
     return `/term-policy/policy/${id}`
   },
+  removePolicy: (id: number) => {
+    return `/term-policy/policy/${id}`
+  }
 }

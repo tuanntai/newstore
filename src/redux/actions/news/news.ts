@@ -34,10 +34,10 @@ export const getPublished = createAsyncThunk<INews[]>(
 export const postNews = createAsyncThunk<IPostNewsResponse, IPostNewsRequest>(
   'news/postNews',
   async (
-    { tittle, excerpt, content, isPinned, imgUrl, status }: IPostNewsRequest,
+    { title, excerpt, content, isPinned, imgUrl, status }: IPostNewsRequest,
     { rejectWithValue }
   ) => {
-    const response = await postNewsApi({ tittle, excerpt, content, isPinned, imgUrl, status })
+    const response = await postNewsApi({ title, excerpt, content, isPinned, imgUrl, status })
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
     }

@@ -12,6 +12,7 @@ import EditNews from './pages/EditNews/EditNews'
 import NotFound from './pages/NotFound/NotFound'
 import { getAccessToken } from './utils/localStorageService'
 import TermPolicy from './pages/TermPolicy/TermPolicy'
+import CreateTermPolicy from './pages/CreateTerm/CreateTermPolicy'
 
 const App = () => {
   const accessToken = getAccessToken()
@@ -25,6 +26,7 @@ const App = () => {
               <Route path="/" element={<HomePage />} />
               <Route path="news/" element={<News />} />
               <Route path="news/create-news" element={<CreateNews />} />
+              <Route path="termPolicy/create-termPolicy" element={<CreateTermPolicy />} />
               <Route path="news/edit-news/:id" element={<EditNews />} />
               <Route path="termPolicy" element={<TermPolicy />} />
             </Route>

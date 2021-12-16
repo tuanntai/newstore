@@ -81,9 +81,9 @@ const News: React.FC = () => {
       render: (text: string) => <div key={text}>{text}</div>
     },
     {
-      title: t`Tittle`,
-      dataIndex: 'tittle',
-      key: 'tittle'
+      title: t`Title`,
+      dataIndex: 'title',
+      key: 'title'
     },
     {
       title: t`Excerpt`,
@@ -127,9 +127,9 @@ const News: React.FC = () => {
       render: (text: string) => <div key={text}>{text}</div>
     },
     {
-      title: t`Tittle`,
-      dataIndex: 'tittle',
-      key: 'tittle'
+      title: t`Title`,
+      dataIndex: 'title',
+      key: 'title'
     },
     {
       title: t`Excerpt`,
@@ -182,7 +182,7 @@ const News: React.FC = () => {
         <Typography className="heading-title">News List</Typography>
         <Link to="create-news">
           <Button type="primary" icon={<PlusOutlined />}>
-            Create Task
+            Create News
           </Button>
         </Link>
       </div>
