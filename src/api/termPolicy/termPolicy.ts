@@ -4,12 +4,22 @@ import { TERM_POLICY_API_URL } from '../apiUrls'
 import { ITermPolicy, ITermPolicyPost } from './interface'
 
 export const getTermApi = async () => {
-  const data = await getApi<ITermPolicy[]>(TERM_POLICY_API_URL.getTerm)
+  const data = await getApi<ITermPolicy>(TERM_POLICY_API_URL.getTerm)
+  return data
+}
+
+export const getTermByIdApi = async (id: number) => {
+  const data = await getApi<ITermPolicy>(TERM_POLICY_API_URL.getTermById(id))
+  return data
+}
+
+export const getPolicyByIdApi = async (id: number) => {
+  const data = await getApi<ITermPolicy>(TERM_POLICY_API_URL.getPolicyById(id))
   return data
 }
 
 export const getPolicyApi = async () => {
-  const data = await getApi<ITermPolicy[]>(TERM_POLICY_API_URL.getPolicy)
+  const data = await getApi<ITermPolicy>(TERM_POLICY_API_URL.getPolicy)
   return data
 }
 
@@ -18,6 +28,11 @@ export const postTermApi = async ({ id, title, content }: ITermPolicyPost) => {
     TERM_POLICY_API_URL.createTerm,
     { id, title, content }
   )
+  return data
+}
+
+export const getTermListApi = async () => {
+  const data = await getApi<ITermPolicy[]>(TERM_POLICY_API_URL.getTermList)
   return data
 }
 

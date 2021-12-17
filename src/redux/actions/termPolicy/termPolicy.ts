@@ -6,13 +6,16 @@ import {
   editPolicyApi,
   editTermApi,
   getPolicyApi,
+  getPolicyByIdApi,
   getTermApi,
+  getTermByIdApi,
+  getTermListApi,
   postPolicyApi,
   postTermApi
 } from '../../../api/termPolicy/termPolicy'
 import { instanceOfDataError } from '../../../utils/apiErrorService'
 
-export const getTerm = createAsyncThunk<ITermPolicy[]>(
+export const getTerm = createAsyncThunk<ITermPolicy>(
   'termPolicy/getTerm',
   async (_, { rejectWithValue }) => {
     const response = await getTermApi()
@@ -23,7 +26,40 @@ export const getTerm = createAsyncThunk<ITermPolicy[]>(
   }
 )
 
-export const getPolicy = createAsyncThunk<ITermPolicy[]>(
+export const getTermList = createAsyncThunk<ITermPolicy[]>(
+  'termPolicy/getTerm',
+  async (_, { rejectWithValue }) => {
+    const response = await getTermListApi()
+    if (instanceOfDataError(response)) {
+      return rejectWithValue(response.error)
+    }
+    return response
+  }
+)
+
+export const getTermById = createAsyncThunk<ITermPolicy, number>(
+  'termPolicy/getTermById',
+  async (id: number, { rejectWithValue }) => {
+    const response = await getTermByIdApi(id)
+    if (instanceOfDataError(response)) {
+      return rejectWithValue(response.error)
+    }
+    return response
+  }
+)
+
+export const getPolicyById = createAsyncThunk<ITermPolicy, number>(
+  'termPolicy/getPolicyById',
+  async (id: number, { rejectWithValue }) => {
+    const response = await getPolicyByIdApi(id)
+    if (instanceOfDataError(response)) {
+      return rejectWithValue(response.error)
+    }
+    return response
+  }
+)
+
+export const getPolicy = createAsyncThunk<ITermPolicy>(
   'termPolicy/getPolicy',
   async (_, { rejectWithValue }) => {
     const response = await getPolicyApi()

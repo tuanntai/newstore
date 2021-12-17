@@ -54,9 +54,7 @@ const EditTermPolicy: React.FC = () => {
         title: value.title,
         content: contentText
       }
-      if (termInfo.type === ETermPolicyStatus.POLICY) {
-        console.log(termInfo.type ,'policy');
-        
+      if (termInfo.type === ETermPolicyStatus.POLICY) {  
         dispatch(
           editPolicy({
             id: termInfo.id,
@@ -64,8 +62,6 @@ const EditTermPolicy: React.FC = () => {
           })
         )
       } else {
-        console.log(termInfo.type ,'term');
-
         dispatch(
           editTerm({
             id: termInfo.id,

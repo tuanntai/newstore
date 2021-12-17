@@ -4,16 +4,18 @@ import { ITermPolicyState } from '../../interface/termPolicy/termPolicy'
 import { RootState } from '../../store'
 
 const initialState: ITermPolicyState = {
-  term: [],
-  policy: [],
+  termList: [],
+  term: undefined,
+  policy: undefined,
   editInfo: {
     id: 0,
     title: '',
     content: '',
     type: ''
   },
-
   id: 0,
+  termId: 0,
+  policeId: 0,
   loading: false,
   success: false,
   error: null
@@ -79,7 +81,7 @@ const termPolicySlice = createSlice({
         state.loading = true
       })
       .addCase(deletePolicy.fulfilled, (state, action) => {
-        state.loading = false 
+        state.loading = false
         state.success = true
       })
       .addCase(deletePolicy.rejected, (state, action) => {
@@ -103,7 +105,7 @@ export const termPolicySelector = {
   termPolicyErrorSelector,
   policyListSelector,
   termPolicyIdSelector,
-  editInfoSelector,
+  editInfoSelector
 }
 export const { setTermPolicyId, resetTermPolicyProgress, setEditInfo } = termPolicySlice.actions
 

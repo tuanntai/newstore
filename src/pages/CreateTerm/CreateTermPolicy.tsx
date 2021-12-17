@@ -116,6 +116,9 @@ const CreateTermPolicy: React.FC = () => {
           >
             Are you sure ?
           </Modal>
+          <Modal>
+            
+          </Modal>
         </div>
       </div>
     </Form>
