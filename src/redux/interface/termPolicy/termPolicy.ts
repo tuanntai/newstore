@@ -1,7 +1,8 @@
 import { ITermPolicy } from '../../../api/termPolicy/interface'
 
 export interface ITermPolicyState {
-  termList?: ITermPolicy[]
+  termList: ITermPolicy[]
+  policyList: ITermPolicy[]
   term?: ITermPolicy
   policy?: ITermPolicy
   termId: number

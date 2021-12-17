@@ -1,7 +1,7 @@
 import { Modal } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
-import { Button, Form, Input, notification } from 'antd'
+import { Button, Form, Input } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import '../CreateTerm/CreateTermPolicy.less'
 import 'react-quill/dist/quill.snow.css'
@@ -20,8 +20,6 @@ const EditTermPolicy: React.FC = () => {
   const dispatch = useAppDispatch()
   const [showModal, setShowModal] = useState(false)
   const [contentText, setContentText] = useState('')
-  const progress = useAppSelector(termPolicySelector.termPolicyProgressSelector)
-  const errorMessage = useAppSelector(termPolicySelector.termPolicyErrorSelector)
   const termInfo = useAppSelector(termPolicySelector.editInfoSelector)
   const [termFields, setTermFields] = useState([{ name: 'title', value: '' }])
 
@@ -36,16 +34,6 @@ const EditTermPolicy: React.FC = () => {
       setTermFields([{ name: 'title', value: termInfo.title }])
     }
   }, [termInfo])
-  useEffect(() => {
-    if (progress === false && errorMessage) {
-      notification.error({
-        message: errorMessage,
-        placement: 'topRight'
-      })
-    } else if (progress) {
-      navigate(-1)
-    }
-  }, [progress, errorMessage, dispatch])
 
   const handleSubmit = () => {
     setShowModal(!showModal)
@@ -54,7 +42,7 @@ const EditTermPolicy: React.FC = () => {
         title: value.title,
         content: contentText
       }
-      if (termInfo.type === ETermPolicyStatus.POLICY) {  
+      if (termInfo.type === ETermPolicyStatus.POLICY) {
         dispatch(
           editPolicy({
             id: termInfo.id,
@@ -67,9 +55,11 @@ const EditTermPolicy: React.FC = () => {
             id: termInfo.id,
             editedData: createParam
           })
-        )}
+        )
+      }
       setTermFields([{ name: 'title', value: '' }])
       setContentText('')
+      navigate(-1)
     })
   }
 

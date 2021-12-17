@@ -1,45 +1,29 @@
 import { Modal, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
-import { Button, Typography, Form, Input, notification } from 'antd'
-import { useAppDispatch, useAppSelector } from '../../redux/hook'
+import { Button, Typography, Form, Input } from 'antd'
+import { useAppDispatch } from '../../redux/hook'
 import './CreateTermPolicy.less'
 import Editor from '../../component/Editor/Editor'
-import { resetTermPolicyProgress, termPolicySelector } from '../../redux/reducer/termPolicy/termPolicyReduces'
+import { resetTermPolicyProgress } from '../../redux/reducer/termPolicy/termPolicyReduces'
 import { ETermPolicyStatus } from '../../api/termPolicy/interface'
 import { postPolicy, postTerm } from '../../redux/actions/termPolicy/termPolicy'
+import { useNavigate } from 'react-router-dom'
 
 const CreateTermPolicy: React.FC = () => {
   const { Option } = Select
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [showModal, setShowModal] = useState(false)
   const [postStatus, setPostStatus] = useState<ETermPolicyStatus>(ETermPolicyStatus.TERM)
-  const errorMessage = useAppSelector(termPolicySelector.termPolicyErrorSelector)
-  const progress = useAppSelector(termPolicySelector.termPolicyProgressSelector)
   const [form] = Form.useForm()
   const [contentText, setContentText] = useState('')
-  const [termFields, setTermFields] = useState([
-    { name: 'title', value: '' },
-  ])
+  const [termFields, setTermFields] = useState([{ name: 'title', value: '' }])
 
   useEffect(() => {
     dispatch(setCurrentPage('Create Term Policy'))
     dispatch(resetTermPolicyProgress())
   }, [dispatch])
-
-  useEffect(() => {
-    if (progress === false && errorMessage) {
-      notification.error({
-        message: errorMessage,
-        placement: 'topRight'
-      })
-    } else if (progress)
-      notification.success({
-        message: `Successfully`,
-        placement: 'topRight'
-      })
-    dispatch(resetTermPolicyProgress())
-  }, [progress, errorMessage, dispatch])
 
   const handleSubmit = () => {
     setShowModal(!showModal)
@@ -47,16 +31,14 @@ const CreateTermPolicy: React.FC = () => {
       const createParam = {
         id: value.id,
         title: value.title,
-        content: contentText,
+        content: contentText
       }
-      if(postStatus === ETermPolicyStatus.POLICY){
+      if (postStatus === ETermPolicyStatus.POLICY) {
         dispatch(postPolicy(createParam))
-      } else if (postStatus === ETermPolicyStatus.TERM)
-      dispatch(postTerm(createParam))
-      setTermFields([
-        { name: 'title', value: '' }
-      ])
+      } else if (postStatus === ETermPolicyStatus.TERM) dispatch(postTerm(createParam))
+      setTermFields([{ name: 'title', value: '' }])
       setContentText('')
+      navigate(-1)
     })
   }
 
@@ -116,9 +98,7 @@ const CreateTermPolicy: React.FC = () => {
           >
             Are you sure ?
           </Modal>
-          <Modal>
-            
-          </Modal>
+          <Modal></Modal>
         </div>
       </div>
     </Form>

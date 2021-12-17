@@ -7,6 +7,7 @@ import {
   editTermApi,
   getPolicyApi,
   getPolicyByIdApi,
+  getPolicyListApi,
   getTermApi,
   getTermByIdApi,
   getTermListApi,
@@ -27,9 +28,20 @@ export const getTerm = createAsyncThunk<ITermPolicy>(
 )
 
 export const getTermList = createAsyncThunk<ITermPolicy[]>(
-  'termPolicy/getTerm',
+  'termPolicy/getTerms',
   async (_, { rejectWithValue }) => {
     const response = await getTermListApi()
+    if (instanceOfDataError(response)) {
+      return rejectWithValue(response.error)
+    }
+    return response
+  }
+)
+
+export const getPoliciesList = createAsyncThunk<ITermPolicy[]>(
+  'termPolicy/getPolicies',
+  async (_, { rejectWithValue }) => {
+    const response = await getPolicyListApi()
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
     }
@@ -72,7 +84,7 @@ export const getPolicy = createAsyncThunk<ITermPolicy>(
 
 export const postTerm = createAsyncThunk<ITermPolicyPost, ITermPolicy>(
   'termPolicy/postTerm',
-  async ({ title, content, id }: ITermPolicyPost, { rejectWithValue }) => {
+  async ({ title, content, id }: ITermPolicyPost, { rejectWithValue, dispatch }) => {
     const response = await postTermApi({ title, content, id })
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
@@ -94,7 +106,7 @@ export const postPolicy = createAsyncThunk<ITermPolicyPost, ITermPolicy>(
 
 export const editTerm = createAsyncThunk(
   'termPolicy/editTerm',
-  async ({ id, editedData }: IEditRequest, { rejectWithValue }) => {
+  async ({ id, editedData }: IEditRequest) => {
     const response = await editTermApi(id, editedData)
     return response
   }
@@ -102,18 +114,26 @@ export const editTerm = createAsyncThunk(
 
 export const editPolicy = createAsyncThunk(
   'termPolicy/editPolicy',
-  async ({ id, editedData }: IEditRequest, { rejectWithValue }) => {
+  async ({ id, editedData }: IEditRequest) => {
     const response = await editPolicyApi(id, editedData)
     return response
   }
 )
 
-export const deleteTerm = createAsyncThunk('termPolicy/deleteTerm', async (id: number) => {
-  const response = await deleteTermApi(id)
-  return response
-})
+export const deleteTerm = createAsyncThunk(
+  'termPolicy/deleteTerm',
+  async (id: number, { dispatch }) => {
+    const response = await deleteTermApi(id)
+    dispatch(getTermList())
+    return response
+  }
+)
 
-export const deletePolicy = createAsyncThunk('termPolicy/deletePolicy', async (id: number) => {
-  const response = await deletePolicyApi(id)
-  return response
-})
+export const deletePolicy = createAsyncThunk(
+  'termPolicy/deletePolicy',
+  async (id: number, { dispatch }) => {
+    const response = await deletePolicyApi(id)
+    dispatch(getPoliciesList())
+    return response
+  }
+)

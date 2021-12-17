@@ -9,8 +9,8 @@ import ListTable from '../../component/ListTable/ListTable'
 import {
   deletePolicy,
   deleteTerm,
-  getPolicy,
-  getTerm
+  getPoliciesList,
+  getTermList
 } from '../../redux/actions/termPolicy/termPolicy'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
@@ -43,10 +43,8 @@ const TermPolicy: React.FC = () => {
   const deleteItem = (id: number) => {
     if (type === 'Term') {
       dispatch(deleteTerm(id))
-      dispatch(getTerm())
     } else if (type === 'Policy') {
       dispatch(deletePolicy(id))
-      dispatch(getPolicy())
     }
     setShowModal(!showModal)
   }
@@ -135,39 +133,33 @@ const TermPolicy: React.FC = () => {
 
   useEffect(() => {
     dispatch(setCurrentPage('Term Policy'))
-    dispatch(getTerm())
-    dispatch(getPolicy())
+    dispatch(getTermList())
+    dispatch(getPoliciesList())
   }, [])
 
   return (
     <div className="termPolicy-wrapper">
       <div className="heading">
-        <Typography className="heading-title">Term</Typography>
+        <Typography className="heading-title">Term And Policy</Typography>
         <Link to="create-termPolicy">
           <Button type="primary" icon={<PlusOutlined />}>
-            Create Term
+            Create
           </Button>
         </Link>
       </div>
+
       <ListTable
         title="List Of Terms"
-        dataSource={[termList]}
+        dataSource={termList}
         pagination={false}
         columns={column}
         scroll={{ x: 'auto' }}
       />
       <br />
-      <div className="heading">
-        <Typography className="heading-title">Policy</Typography>
-        <Link to="create-termPolicy">
-          <Button type="primary" icon={<PlusOutlined />}>
-            Create Policy
-          </Button>
-        </Link>
-      </div>
+
       <ListTable
         title="List Of Policy"
-        dataSource={[policyList]}
+        dataSource={policyList}
         pagination={false}
         columns={policyColumn}
         scroll={{ x: 'auto' }}
@@ -178,7 +170,6 @@ const TermPolicy: React.FC = () => {
         visible={showModal}
         onOk={() => deleteItem(termPolicyId)}
         onCancel={handleCancel}
-      
         cancelText="Cancel"
         okText="Delete"
       >
