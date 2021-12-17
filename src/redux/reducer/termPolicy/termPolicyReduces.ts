@@ -1,20 +1,18 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit'
 import { deletePolicy, deleteTerm, getPolicy, getTerm } from '../../actions/termPolicy/termPolicy'
 import { ITermPolicyState } from '../../interface/termPolicy/termPolicy'
-import { ITermPolicy } from '../../../api/termPolicy/interface'
 import { RootState } from '../../store'
 
 const initialState: ITermPolicyState = {
   term: [],
   policy: [],
-  termInfo: {
+  editInfo: {
+    id: 0,
     title: '',
-    content: ''
+    content: '',
+    type: ''
   },
-  policyInfo: {
-    title: '',
-    content: ''
-  },
+
   id: 0,
   loading: false,
   success: false,
@@ -31,6 +29,12 @@ const termPolicySlice = createSlice({
     resetTermPolicyProgress: (state) => {
       state.success = false
       state.error = null
+    },
+    setEditInfo: (state, action) => {
+      state.editInfo.id = action.payload.id
+      state.editInfo.content = action.payload.content
+      state.editInfo.title = action.payload.title
+      state.editInfo.type = action.payload.type
     }
   },
   extraReducers: (builder) => {
@@ -65,7 +69,6 @@ const termPolicySlice = createSlice({
       .addCase(deleteTerm.fulfilled, (state, action) => {
         state.loading = false
         state.success = true
-        state.term = state.term.filter((item: ITermPolicy) => item !== action.payload)
       })
       .addCase(deleteTerm.rejected, (state, action) => {
         state.loading = false
@@ -76,9 +79,8 @@ const termPolicySlice = createSlice({
         state.loading = true
       })
       .addCase(deletePolicy.fulfilled, (state, action) => {
-        state.loading = false
+        state.loading = false 
         state.success = true
-        state.policy = state.policy.filter((item: ITermPolicy) => item !== action.payload)
       })
       .addCase(deletePolicy.rejected, (state, action) => {
         state.loading = false
@@ -92,13 +94,17 @@ const termPolicyProgressSelector = createSelector(selectSelf, (state) => state.s
 const termPolicyErrorSelector = createSelector(selectSelf, (state) => state.error)
 const termListSelector = createSelector(selectSelf, (state) => state.term)
 const policyListSelector = createSelector(selectSelf, (state) => state.policy)
+const termPolicyIdSelector = createSelector(selectSelf, (state) => state.id)
+const editInfoSelector = createSelector(selectSelf, (state) => state.editInfo)
 
 export const termPolicySelector = {
   termListSelector,
   termPolicyProgressSelector,
   termPolicyErrorSelector,
-  policyListSelector
+  policyListSelector,
+  termPolicyIdSelector,
+  editInfoSelector,
 }
-export const { resetTermPolicyProgress } = termPolicySlice.actions
+export const { setTermPolicyId, resetTermPolicyProgress, setEditInfo } = termPolicySlice.actions
 
 export default termPolicySlice.reducer

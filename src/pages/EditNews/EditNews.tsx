@@ -14,7 +14,6 @@ import Editor from '../../component/Editor/Editor'
 
 const EditNews: React.FC = () => {
   const [isPin, setIsPin] = useState(false)
-
   const { id } = useParams()
   const { Option } = Select
   const [form] = Form.useForm()

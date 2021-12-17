@@ -1,11 +1,11 @@
 export interface ITermPolicyPost {
-  id?: number
+  id: number
   title: string
   content: string
 }
 
 export interface ITermPolicy {
-  id?: number
+  id: number
   title: string
   content: string
 }

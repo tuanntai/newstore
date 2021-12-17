@@ -1,7 +1,7 @@
 import { Modal, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
-import { Button, Typography, Form, Input, Switch, notification } from 'antd'
+import { Button, Typography, Form, Input, notification } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import './CreateTermPolicy.less'
 import Editor from '../../component/Editor/Editor'
@@ -45,6 +45,7 @@ const CreateTermPolicy: React.FC = () => {
     setShowModal(!showModal)
     form.validateFields().then((value) => {
       const createParam = {
+        id: value.id,
         title: value.title,
         content: contentText,
       }
@@ -85,7 +86,6 @@ const CreateTermPolicy: React.FC = () => {
           </Form.Item>
         </div>
         <div className="right">
-
           <div className="select-container">
             <Typography>Select Type:</Typography>
             <Select
