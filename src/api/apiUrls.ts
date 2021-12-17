@@ -38,14 +38,21 @@ export const AUTH_API_URL = {
 export const TERM_POLICY_API_URL = {
   createTerm: '/term-policy/term',
   getTerm: '/term-policy/term',
+  getTermList: '/term-policy/terms',
   updateTerm: (id: number) => {
     return `/term-policy/term/${id}`
   },
   removeTerm: (id: number) => {
     return `/term-policy/term/${id}`
   },
+  getTermById: (id: number) => {
+    return `/term-policy/term/${id}`
+  },
   createPolicy: '/term-policy/policy',
   getPolicy: '/term-policy/policy',
+  getPolicyById: (id: number) => {
+    return `/term-policy/term/${id}`
+  },
   updatePolicy: (id: number) => {
     return `/term-policy/policy/${id}`
   },
