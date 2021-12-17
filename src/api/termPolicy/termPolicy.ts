@@ -34,7 +34,6 @@ export const editTermApi = async (id: number, editedData: any) => {
   return data
 }
 
-
 export const editPolicyApi = async (id: number, editedData: any) => {
   const data = await patchApi(TERM_POLICY_API_URL.updatePolicy(id), editedData)
   return data
