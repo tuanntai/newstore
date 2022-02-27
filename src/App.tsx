@@ -1,36 +1,32 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { PrivateRoute } from './component/PrivateRoute/PrivateRoute'
 import SignIn from './pages/SignIn/SignIn'
 import './App.less'
 import Root from './layout/Root/Root'
 import store from './redux/store'
 import { Provider } from 'react-redux'
 import HomePage from './pages/HomePage/HomePage'
-import News from './pages/News/News'
-import CreateNews from './pages/CreateNews/CreateNews'
-import EditNews from './pages/EditNews/EditNews'
+import Book from './pages/Book/Book'
 import NotFound from './pages/NotFound/NotFound'
-import { getAccessToken } from './utils/localStorageService'
-import TermPolicy from './pages/TermPolicy/TermPolicy'
-import CreateTermPolicy from './pages/CreateTerm/CreateTermPolicy'
-import EditTermPolicy from './pages/EditTermPolicy/EditTermPolicy'
+import SignUp from './pages/SignUp/SignUp'
+import User from './pages/User/User'
+import CreateBook from './pages/CreateBook/CreateBook'
+import BookInfo from './pages/BookInfo/BookInfo'
 
 const App = () => {
-  const accessToken = getAccessToken()
   return (
     <Provider store={store}>
       <div className="App">
         <BrowserRouter>
           <Routes>
             <Route path="login" element={<SignIn />} />
-            <Route path="/" element={<PrivateRoute component={Root} />}>
+            <Route path="/" element={<Root />}>
               <Route path="/" element={<HomePage />} />
-              <Route path="news/" element={<News />} />
-              <Route path="news/create-news" element={<CreateNews />} />
-              <Route path="termPolicy/create-termPolicy" element={<CreateTermPolicy />} />
-              <Route path="news/edit-news/:id" element={<EditNews />} />
-              <Route path="termPolicy/edit-term-policy/:id" element={<EditTermPolicy />} />
-              <Route path="termPolicy" element={<TermPolicy />} />
+              <Route path="signUp" element={<SignUp />} />
+              <Route path="user/" element={<User />} />
+              <Route path="book/" element={<Book />} />
+              <Route path="book/create-book" element={<CreateBook />} />
+              <Route path="book/:id" element={<BookInfo />} />
+              {/* <Route path="book/edit-book/:id" element={<EditBook />} /> */}
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

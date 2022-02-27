@@ -2,6 +2,7 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 import { notification, Upload } from 'antd'
 import React, { useState } from 'react'
 import { IUploadFile } from './interface'
+import './UploadFile.less'
 
 const UploadFile: React.FC<IUploadFile> = ({ imgUrl, setImgUrl }) => {
   const [loadingImage, setLoadingImage] = useState(false)
@@ -29,6 +30,7 @@ const UploadFile: React.FC<IUploadFile> = ({ imgUrl, setImgUrl }) => {
     }
     if (info.file.status === 'done') {
       setImgUrl(info.file.response)
+      console.log(info.file.response)
       setLoadingImage(false)
     }
   }

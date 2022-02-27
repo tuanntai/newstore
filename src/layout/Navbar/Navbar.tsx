@@ -1,11 +1,13 @@
 import { HomeOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Menu } from 'antd'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { removeAccessToken } from '../../utils/localStorageService'
+import { getAccessToken, removeAccessToken } from '../../utils/localStorageService'
+import '../AdminLayout/AdminLayout.less'
 
 const Navbar = () => {
   const [selectedKey, setSelectedKey] = useState('')
+  const accessToken = getAccessToken()
 
   const handleClick = (e: any) => {
     setSelectedKey(e.key)
@@ -28,12 +30,15 @@ const Navbar = () => {
         <Menu.Item icon={<HomeOutlined />} key="1" onClick={() => handleLinkClick('/')}>
           <span>Home</span>
         </Menu.Item>
-        <Menu.Item icon={<HomeOutlined />} key="2" onClick={() => handleLinkClick('news')}>
-          <span>News</span>
+        <Menu.Item icon={<HomeOutlined />} key="2" onClick={() => handleLinkClick('book')}>
+          <span>Book</span>
         </Menu.Item>
-        <Menu.Item icon={<HomeOutlined />} key="3" onClick={() => handleLinkClick('termPolicy')}>
-          <span>Term Policy</span>
-        </Menu.Item>
+
+        {accessToken && (
+          <Menu.Item icon={<HomeOutlined />} key="3" onClick={() => handleLinkClick('user')}>
+            <span>User</span>
+          </Menu.Item>
+        )}
 
         <Menu.Item key="6" onClick={handleDisconnect} icon={<LogoutOutlined />}>
           <span>Logout</span>

@@ -1,0 +1,76 @@
+.book-detail-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.book-info {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  div {
+    flex: 50% 0 0;
+  }
+}
+
+.book-image {
+  display: flex;
+  justify-content: center;
+  img {
+    width: 400px;
+    height: auto;
+  }
+}
+
+.right-book-info {
+  margin: 0 20px;
+  background-color: white;
+  h1 {
+    text-align: center;
+    font-size: 30px;
+    line-height: 45px;
+    padding: 0 30px;
+  }
+  .owner {
+    margin-bottom: 20px;
+    padding: 0 20px;
+    font-size: 25px;
+    line-height: 35px;
+    color: #4b4b4b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    div {
+      span {
+        color: #146356;
+      }
+      .sold {
+        color: red;
+      }
+    }
+  }
+  .description {
+    padding: 20px;
+    border: 1px solid #146356;
+    margin: 0 20px;
+    font-size: 20px;
+  }
+
+  .buy-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    button {
+      padding: 5px 15px;
+      border-radius: 5px;
+      outline: none;
+      border: 1px solid #146356;
+      background: #146356;
+      color: white;
+      font-size: 25px;
+      cursor: pointer;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+  }
+}

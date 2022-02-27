@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import ReactQuill from 'react-quill'
-import { uploadThumbnailApi } from '../../api/news/news'
+import { uploadThumbnailApi } from '../../api/book/book'
 import { IEditor } from './interface'
 
 const Editor: React.FC<IEditor> = ({ contentText, setContentText }) => {
   let quillReact: ReactQuill
-  const imageHandler = () => {
+  const imageHandler = useCallback(() => {
     const input = document.createElement('input')
     input.setAttribute('type', 'file')
     input.setAttribute('accept', 'image/*')
@@ -24,7 +24,7 @@ const Editor: React.FC<IEditor> = ({ contentText, setContentText }) => {
         }
       }
     }
-  }
+  }, [])
 
   const modules = useMemo(() => {
     return {
@@ -49,7 +49,7 @@ const Editor: React.FC<IEditor> = ({ contentText, setContentText }) => {
         matchVisual: true
       }
     }
-  }, [])
+  }, [imageHandler])
 
   return (
     <ReactQuill

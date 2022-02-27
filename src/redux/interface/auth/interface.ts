@@ -4,4 +4,5 @@ export interface IAuthState {
   loading: boolean
   success: boolean
   error: string | null
+  userId: number
 }

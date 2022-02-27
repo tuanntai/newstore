@@ -7,8 +7,8 @@ import { setAccessToken } from '../../../utils/localStorageService'
 
 export const authLogin = createAsyncThunk<IAuthLoginResponse, IPostUserRequest>(
   'auth/login',
-  async ({ email, password }: IPostUserRequest, { rejectWithValue }) => {
-    const response = await authLoginApi({ email, password })
+  async ({ username, password }: IPostUserRequest, { rejectWithValue }) => {
+    const response = await authLoginApi({ username, password })
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
     }

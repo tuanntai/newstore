@@ -1,5 +1,4 @@
-import { Typography, Form, Input, Button, notification, Spin } from 'antd'
-import { LoadingOutlined } from '@ant-design/icons'
+import { Typography, Form, Input, Button, notification } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './SignIn.less'
@@ -17,7 +16,7 @@ const SignIn: React.FC = () => {
   const message = useAppSelector(authSelectors.authMessageSelector)
   const [loadingProgress, setLoadingProgress] = useState(false)
   const [fields, setFields] = useState([
-    { name: 'email', value: '' },
+    { name: 'username', value: '' },
     { name: 'password', value: '' }
   ])
 
@@ -33,14 +32,14 @@ const SignIn: React.FC = () => {
       setLoadingProgress(false)
       dispatch(resetProgress())
     }
-  }, [message])
+  }, [message, dispatch])
 
   const handleLogin = () => {
     setLoadingProgress(true)
     form.validateFields().then((values) => {
       dispatch(
         authLogin({
-          email: values.email,
+          username: values.username,
           password: values.password
         })
       )
@@ -59,7 +58,7 @@ const SignIn: React.FC = () => {
           onFinish={handleLogin}
         >
           <Title className="title">Login</Title>
-          <Form.Item name="email" label="email" rules={[{ required: true }]}>
+          <Form.Item name="username" label="username" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
           <Form.Item name="password" label="Password" rules={[{ required: true }]}>
