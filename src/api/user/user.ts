@@ -1,12 +1,13 @@
 import { IDataError } from '../../utils/apiErrorService'
 import { getApi, patchApi, postApi } from '../../utils/apiHelper'
 import { BOOK_API_URLS, USER_API_URL } from '../apiUrls'
-import { IBook } from '../book/interface'
+import { AllBookById, IBook } from '../book/interface'
 import {
   ICreateUserRequest,
   IPostUserRequest,
   IPostUserResponse,
   IUpdateRequest,
+  IUserById,
   IUserInfo
 } from './interface'
 
@@ -22,12 +23,12 @@ export const postUserApi = async ({ username, password }: IPostUserRequest) => {
 }
 
 export const getUserByIdApi = async (id: number) => {
-  const data = await getApi<IUserInfo>(USER_API_URL.getUserById(id))
+  const data = await getApi<IUserById>(USER_API_URL.getUserById(id))
   return data
 }
 
 export const createUserApi = async (payload: ICreateUserRequest) => {
-  const data = await postApi<ICreateUserRequest, IUserInfo | IDataError>(
+  const data = await postApi<ICreateUserRequest, IUserById | IDataError>(
     USER_API_URL.getUser,
     payload
   )
@@ -35,7 +36,7 @@ export const createUserApi = async (payload: ICreateUserRequest) => {
 }
 
 export const getBookByUserIdApi = async (id: number) => {
-  const data = await getApi<IBook[]>(BOOK_API_URLS.getBookByUserId(id))
+  const data = await getApi<AllBookById>(BOOK_API_URLS.getBookByUserId(id))
   return data
 }
 

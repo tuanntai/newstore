@@ -9,6 +9,10 @@ export interface IPostUserResponse {
   userId: number
 }
 
+export interface IUserById {
+  data: IUserInfo
+}
+
 export interface IUserInfo {
   id: number
   username: string
@@ -16,7 +20,6 @@ export interface IUserInfo {
   phone: string
   fullName: string
   address: string
-  email: string
   soldBookAmount: number
   avatarUrl: string
   isVerify: false
@@ -29,7 +32,6 @@ export interface ICreateUserRequest {
   phone: string
   fullName: string
   address: string
-  email: string
   avatarUrl: string
 }
 
@@ -38,7 +40,6 @@ export interface IUpdateRequest {
   id: number
   username: string
   password: string
-  email: string
   phone: string
   fullName: string
 }

@@ -9,18 +9,12 @@ import {
 } from '../../../api/user/user'
 import { instanceOfDataError } from '../../../utils/apiErrorService'
 
-export const getUserById = createAsyncThunk<IUserInfo, number>(
-  'user/getUserById',
-  async (id: number, { rejectWithValue }) => {
-    const response = await getUserByIdApi(id)
-    if (instanceOfDataError(response)) {
-      return rejectWithValue(response.error)
-    }
-    return response
-  }
-)
+export const getUserById = createAsyncThunk('user/getUserById', async (id: number) => {
+  const response = await getUserByIdApi(id)
+  return response
+})
 
-export const createUser = createAsyncThunk<IUserInfo, ICreateUserRequest>(
+export const createUser = createAsyncThunk(
   'user/createUser',
   async (payload: ICreateUserRequest, { rejectWithValue }) => {
     const response = await createUserApi(payload)
@@ -31,7 +25,7 @@ export const createUser = createAsyncThunk<IUserInfo, ICreateUserRequest>(
   }
 )
 
-export const getBookByUserId = createAsyncThunk<IBook[], number>(
+export const getBookByUserId = createAsyncThunk(
   'user/getBookByUserId',
   async (id: number, { rejectWithValue }) => {
     const response = await getBookByUserIdApi(id)
@@ -42,7 +36,7 @@ export const getBookByUserId = createAsyncThunk<IBook[], number>(
   }
 )
 
-export const updateUser = createAsyncThunk<IUserInfo,IUpdateRequest>(
+export const updateUser = createAsyncThunk(
   'user/updateUser',
   async (payload: IUpdateRequest, { rejectWithValue }) => {
     const response = await updateUserApi(payload)

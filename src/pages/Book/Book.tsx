@@ -12,6 +12,7 @@ import { Link } from 'react-router-dom'
 import { bookSelectors, setBookId } from '../../redux/reducer/book/bookReducer'
 import { deleteBookById, getList } from '../../redux/actions/book/book'
 import { format } from 'date-fns'
+import { EOrder } from '../../api/book/interface'
 
 const Book: React.FC = () => {
   let navigate = useNavigate()
@@ -20,23 +21,20 @@ const Book: React.FC = () => {
   const [showEditModal, setShowEditModal] = useState(false)
   const listBook = useAppSelector(bookSelectors.bookListSelector)
   const bookId = useAppSelector(bookSelectors.bookIdSelector)
+  const [status, setStatus] = useState('')
+  const [order, setOrder] = useState<EOrder>(EOrder.DESC)
 
   useEffect(() => {
     dispatch(setCurrentPage('Book'))
   }, [dispatch])
   const [searchKey, setSearchKey] = useState('')
   useEffect(() => {
-    dispatch(getList({ search: searchKey, size: 100, page: 0 }))
-  }, [dispatch, searchKey])
+    dispatch(getList({ search: searchKey, page: 0, size: 100, status, order }))
+  }, [dispatch, searchKey, order, status])
 
   const handleBuy = (id: number) => {
     dispatch(setBookId(id))
     setShowModal(!showModal)
-  }
-
-  const handleEdit = (id: number) => {
-    dispatch(setBookId(id))
-    navigate(`edit-book/${id}`)
   }
 
   const deleteBook = (id: number) => {

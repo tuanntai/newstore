@@ -1,6 +1,6 @@
 import { CheckCircleTwoTone, DislikeOutlined, LikeOutlined } from '@ant-design/icons'
 import { Modal, notification } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { USER_API_URL } from '../../api/apiUrls'
 import { EStatus } from '../../api/book/interface'
@@ -21,19 +21,20 @@ const BookInfo: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [owner, setOwner] = useState<IUserInfo>()
   const userId = getUserIdLocal()
+
+  const ownerInfoAction = useCallback(async () => {
+    const response = await getApi<IUserInfo>(USER_API_URL.getUserById(Number(bookInfo?.ownerId)))
+    setOwner(response)
+  }, [bookInfo?.ownerId])
+
   useEffect(() => {
     dispatch(getBookById(Number(id)))
     ownerInfoAction()
-  }, [id, dispatch])
+  }, [id, dispatch, ownerInfoAction])
 
   const handleOk = () => {
     setIsModalVisible(false)
     dispatch(buyBook({ id: Number(id), buyerId: Number(userId) }))
-  }
-
-  const ownerInfoAction = async () => {
-    const response = await getApi<IUserInfo>(USER_API_URL.getUserById(Number(bookInfo?.ownerId)))
-    setOwner(response)
   }
 
   const handleCancel = () => {

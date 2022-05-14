@@ -19,7 +19,6 @@ const initialState: IUserState = {
     address: '',
     avatarUrl: '',
     balance: 0,
-    email: '',
     fullName: '',
     id: 0,
     isVerify: false,
@@ -40,7 +39,6 @@ const userSlice = createSlice({
         address: '',
         avatarUrl: '',
         balance: 0,
-        email: '',
         fullName: '',
         id: 0,
         isVerify: false,
@@ -54,16 +52,16 @@ const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getUserById.fulfilled, (state, action) => {
-        state.userInfo = action.payload
+        state.userInfo = action.payload.data
       })
       .addCase(createUser.fulfilled, (state, action) => {
-        state.userInfo = action.payload
+        state.userInfo = action.payload.data.data
       })
       .addCase(getBookByUserId.fulfilled, (state, action) => {
-        state.listBook = action.payload.reverse()
+        state.listBook = action.payload.data.reverse()
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.userInfo = action.payload
+        state.userInfo = action.payload.data
       })
   }
 })

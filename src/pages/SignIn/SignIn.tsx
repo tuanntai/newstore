@@ -36,14 +36,22 @@ const SignIn: React.FC = () => {
 
   const handleLogin = () => {
     setLoadingProgress(true)
-    form.validateFields().then((values) => {
-      dispatch(
-        authLogin({
-          username: values.username,
-          password: values.password
-        })
-      )
-    })
+    form
+      .validateFields()
+      .then((values) => {
+        dispatch(
+          authLogin({
+            username: values.username,
+            password: values.password
+          })
+        )
+      })
+      .catch(() => {
+        setFields([
+          { name: 'username', value: '' },
+          { name: 'password', value: '' }
+        ])
+      })
   }
 
   return (

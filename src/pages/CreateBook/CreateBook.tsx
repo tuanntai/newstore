@@ -5,7 +5,6 @@ import { Button, Typography, Form, Input } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import './CreateBook.less'
 import UploadFile from '../../component/UploadFile/UploadFile'
-import Editor from '../../component/Editor/Editor'
 import { postBook } from '../../redux/actions/book/book'
 import { userSelectors } from '../../redux/reducer/user/userReducer'
 import { useNavigate } from 'react-router-dom'
@@ -71,12 +70,27 @@ const CreateBook: React.FC = () => {
           <Form.Item name="author" label="author" rules={[{ required: true }]}>
             <Input placeholder="author" />
           </Form.Item>
-          <Form.Item name="price" label="price" rules={[{ required: true }]}>
+          <Form.Item
+            name="price"
+            label="price"
+            rules={[
+              { required: true },
+              ({ getFieldValue }) => ({
+                validator(_) {
+                  if (getFieldValue('price') > 0) {
+                    return Promise.resolve()
+                  } else {
+                    return Promise.reject(new Error('Price Should be Bigger than 0 '))
+                  }
+                }
+              })
+            ]}
+          >
             <Input placeholder="price" />
           </Form.Item>
           <div>
             <Form.Item name="description" label="description">
-              <TextArea />
+              <TextArea rows={6} />
             </Form.Item>
           </div>
         </div>

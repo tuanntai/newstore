@@ -6,7 +6,7 @@ export const BOOK_API_URLS = {
     return `user-book?page=${page}`
   },
   getList: (payload: IAllBooksRequest) =>
-    `user-book/getAll?search=${payload.search}&page=${payload.page}&size=${payload.size}`,
+    `user-book/getAll?search=${payload.search}&page=${payload.page}&size=${payload.size}&order=${payload.order}&status=${payload.status}`,
   getBookById: (id: number) => {
     return `user-book/${id}`
   },

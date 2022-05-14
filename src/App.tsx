@@ -11,6 +11,7 @@ import SignUp from './pages/SignUp/SignUp'
 import User from './pages/User/User'
 import CreateBook from './pages/CreateBook/CreateBook'
 import BookInfo from './pages/BookInfo/BookInfo'
+import { PrivateRoute } from './component/PrivateRoute/PrivateRoute'
 
 const App = () => {
   return (
@@ -22,9 +23,10 @@ const App = () => {
             <Route path="/" element={<Root />}>
               <Route path="/" element={<HomePage />} />
               <Route path="signUp" element={<SignUp />} />
-              <Route path="user/" element={<User />} />
+              <Route path="user/" element={<PrivateRoute component={User} />} />
               <Route path="book/" element={<Book />} />
-              <Route path="book/create-book" element={<CreateBook />} />
+
+              <Route path="book/create-book" element={<PrivateRoute component={CreateBook} />} />
               <Route path="book/:id" element={<BookInfo />} />
               {/* <Route path="book/edit-book/:id" element={<EditBook />} /> */}
             </Route>

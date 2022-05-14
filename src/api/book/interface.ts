@@ -13,6 +13,10 @@ export interface IBook {
   status: EStatus
 }
 
+export interface AllBookById {
+  data: IBook
+}
+
 export interface IPostBookRequest {
   ownerId: number
   title: string
@@ -25,14 +29,22 @@ export interface IAllBooksRequest {
   search?: string
   size?: number
   page?: number
+  order?: EOrder
+  status?: string
 }
 
+export enum EOrder {
+  ASC = 'ASC',
+  DESC = 'DESC'
+}
 export interface IAllBooksResponse {
-  data: IBook[]
-  totalItems: number
-  totalPages: number
-  currentPage: number
-  limit: number
+  data: {
+    data: IBook[]
+    totalItems: number
+    totalPages: number
+    currentPage: number
+    limit: number
+  }
 }
 
 export enum EStatus {

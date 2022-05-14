@@ -23,13 +23,11 @@ const User: React.FC = () => {
   const userInfo = useAppSelector(userSelectors.userInfoSelector)
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [thumbnailImage, setThumbnailImage] = useState('')
-  const boughtBook = listBook.filter((item) => item.buyerId === Number(userId))
   const [form] = Form.useForm()
   const [bookFields, setBookFields] = useState([
     { name: 'username', value: '' },
     { name: 'password', value: '' },
     { name: 'fullName', value: '' },
-    { name: 'email', value: '' },
     { name: 'phone', value: '' },
     { name: 'address', value: '' }
   ])
@@ -59,7 +57,6 @@ const User: React.FC = () => {
         username: value.username,
         password: value.password,
         fullName: value.fullName,
-        email: value.email,
         phone: value.phone,
         address: value.address,
         avatarUrl: thumbnailImage,
@@ -74,7 +71,6 @@ const User: React.FC = () => {
     if (userInfo) {
       setBookFields([
         { name: 'fullName', value: userInfo.fullName },
-        { name: 'email', value: userInfo.email },
         { name: 'phone', value: userInfo.phone },
         { name: 'address', value: userInfo.address }
       ])
@@ -159,9 +155,6 @@ const User: React.FC = () => {
         >
           <Form.Item name="fullName" label="Full Name" rules={[{ required: true }]}>
             <Input />
-          </Form.Item>
-          <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-            <Input disabled />
           </Form.Item>
           <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
             <Input />

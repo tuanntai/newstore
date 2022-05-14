@@ -91,11 +91,11 @@ const bookSlice = createSlice({
       })
       .addCase(getList.fulfilled, (state, action) => {
         state.loading = false
-        state.bookList = action.payload.data
-        state.pagePagination.currentPage = action.payload.currentPage
-        state.pagePagination.limit = action.payload.limit
-        state.pagePagination.totalItems = action.payload.totalItems
-        state.pagePagination.totalPages = action.payload.totalPages
+        state.bookList = action.payload.data.data
+        state.pagePagination.currentPage = action.payload.data.currentPage
+        state.pagePagination.limit = action.payload.data.limit
+        state.pagePagination.totalItems = action.payload.data.totalItems
+        state.pagePagination.totalPages = action.payload.data.totalPages
       })
       .addCase(getList.rejected, (state, action) => {
         state.loading = false

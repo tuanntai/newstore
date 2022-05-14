@@ -12,7 +12,7 @@ export const authLogin = createAsyncThunk<IAuthLoginResponse, IPostUserRequest>(
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
     }
-    setAccessToken(response.accessToken)
+    setAccessToken(response.data.accessToken)
     return response
   }
 )

@@ -4,7 +4,6 @@ import { IAuthState } from '../interface/auth/interface'
 import { RootState } from '../store'
 import { createSelector } from 'reselect'
 import { setAccessToken, setUserIdLocal } from '../../utils/localStorageService'
-import { notification } from 'antd'
 
 const initialState: IAuthState = {
   isAuthorized: false,
@@ -36,10 +35,10 @@ const authSlice = createSlice({
       })
       .addCase(authLogin.fulfilled, (state, action) => {
         state.loading = false
-        state.accessToken = action.payload.accessToken
-        state.userId = action.payload.userId
-        setAccessToken(action.payload.accessToken)
-        setUserIdLocal(action.payload.userId)
+        state.accessToken = action.payload.data.accessToken
+        state.userId = action.payload.data.userId
+        setAccessToken(action.payload.data.accessToken)
+        setUserIdLocal(action.payload.data.userId)
         state.isAuthorized = true
       })
       .addCase(authLogin.rejected, (state, action) => {

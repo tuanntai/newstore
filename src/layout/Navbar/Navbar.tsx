@@ -35,14 +35,15 @@ const Navbar = () => {
         </Menu.Item>
 
         {accessToken && (
-          <Menu.Item icon={<HomeOutlined />} key="3" onClick={() => handleLinkClick('user')}>
-            <span>User</span>
-          </Menu.Item>
+          <>
+            <Menu.Item icon={<HomeOutlined />} key="3" onClick={() => handleLinkClick('user')}>
+              <span>User</span>
+            </Menu.Item>
+            <Menu.Item key="6" onClick={handleDisconnect} icon={<LogoutOutlined />}>
+              <span>Logout</span>
+            </Menu.Item>
+          </>
         )}
-
-        <Menu.Item key="6" onClick={handleDisconnect} icon={<LogoutOutlined />}>
-          <span>Logout</span>
-        </Menu.Item>
       </Menu>
     </div>
   )
