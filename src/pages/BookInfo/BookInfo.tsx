@@ -8,6 +8,7 @@ import { IUserInfo } from '../../api/user/interface'
 import { buyBook, getBookById } from '../../redux/actions/book/book'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { bookSelectors } from '../../redux/reducer/book/bookReducer'
+import { setCurrentPage } from '../../redux/reducer/navigateReducer'
 import { getApi } from '../../utils/apiHelper'
 import { getUserIdLocal } from '../../utils/localStorageService'
 import { formatPrice } from '../../utils/toShort'
@@ -22,19 +23,25 @@ const BookInfo: React.FC = () => {
   const [owner, setOwner] = useState<IUserInfo>()
   const userId = getUserIdLocal()
 
+  useEffect(() => {
+    dispatch(setCurrentPage('Book Info'))
+  }, [dispatch])
+
   const ownerInfoAction = useCallback(async () => {
-    const response = await getApi<IUserInfo>(USER_API_URL.getUserById(Number(bookInfo?.ownerId)))
-    setOwner(response)
+    if (bookInfo) {
+      const response = await getApi<IUserInfo>(USER_API_URL.getUserById(bookInfo.ownerId))
+      setOwner(response)
+    }
   }, [bookInfo?.ownerId])
 
   useEffect(() => {
-    dispatch(getBookById(Number(id)))
+    dispatch(getBookById(id as string))
     ownerInfoAction()
   }, [id, dispatch, ownerInfoAction])
 
   const handleOk = () => {
     setIsModalVisible(false)
-    dispatch(buyBook({ id: Number(id), buyerId: Number(userId) }))
+    if (id && userId) dispatch(buyBook({ id, buyerId: userId }))
   }
 
   const handleCancel = () => {
@@ -67,11 +74,11 @@ const BookInfo: React.FC = () => {
                 {owner?.isVerify && <CheckCircleTwoTone />}
               </div>
               Status:{' '}
-              {bookInfo?.status === EStatus.SELLING ? (
-                <span>{bookInfo?.status.toUpperCase()}</span>
+              {/* {bookInfo?.status === EStatus.SELLING ? (
+                <span>{bookInfo?.status}</span>
               ) : (
                 <span className="sold">{bookInfo?.status.toUpperCase()}</span>
-              )}
+              )} */}
             </div>
           </div>
           <div className="description"> {bookInfo?.description} </div>

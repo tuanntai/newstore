@@ -1,8 +1,15 @@
+export enum DeliveryState {
+  None = 'None',
+  Waiting = 'Waiting',
+  Shipping = 'Shipping',
+  Done = 'Done'
+}
+
 export interface IBook {
-  id: number
-  ownerId: number
+  id: string
+  ownerId: string
   owner: string
-  buyerId: number
+  buyerId: string
   title: string
   author: string
   description: string
@@ -11,10 +18,15 @@ export interface IBook {
   startTime: string
   buyTime: string
   status: EStatus
+  deliveryState: DeliveryState
+}
+
+export interface IBookById {
+  data: IBook
 }
 
 export interface AllBookById {
-  data: IBook
+  data: IBook[]
 }
 
 export interface IPostBookRequest {
@@ -33,6 +45,10 @@ export interface IAllBooksRequest {
   status?: string
 }
 
+export interface IPostBookResponse {
+  data: IBook
+}
+
 export enum EOrder {
   ASC = 'ASC',
   DESC = 'DESC'
@@ -49,10 +65,11 @@ export interface IAllBooksResponse {
 
 export enum EStatus {
   SELLING = 'Selling',
-  SOLD = 'SOLD'
+  SOLD = 'SOLD',
+  ALL = 'ALL'
 }
 
 export interface IBuyBookRequest {
-  buyerId: number
-  id: number
+  buyerId: string
+  id: string
 }

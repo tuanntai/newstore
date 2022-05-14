@@ -18,7 +18,7 @@ export const setUserIdLocal = (id: number) => {
 }
 
 export const getUserIdLocal = () => {
-  return localStorage.getItem(userIdLocal)
+  return localStorage.getItem(userIdLocal) || ''
 }
 
 export const removeUserIdLocal = () => {

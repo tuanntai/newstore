@@ -22,7 +22,7 @@ export const postUserApi = async ({ username, password }: IPostUserRequest) => {
   return data
 }
 
-export const getUserByIdApi = async (id: number) => {
+export const getUserByIdApi = async (id: string) => {
   const data = await getApi<IUserById>(USER_API_URL.getUserById(id))
   return data
 }
@@ -35,7 +35,7 @@ export const createUserApi = async (payload: ICreateUserRequest) => {
   return data
 }
 
-export const getBookByUserIdApi = async (id: number) => {
+export const getBookByUserIdApi = async (id: string) => {
   const data = await getApi<AllBookById>(BOOK_API_URLS.getBookByUserId(id))
   return data
 }
@@ -43,4 +43,22 @@ export const getBookByUserIdApi = async (id: number) => {
 export const updateUserApi = async (payload: IUpdateRequest) => {
   const data = await patchApi<IUpdateRequest, IUserInfo | IDataError>(USER_API_URL.getUser, payload)
   return data
+}
+
+export interface IAddFund {
+  userId: string
+  balance: number
+}
+
+export const addFundApi = async (payload: IAddFund) => {
+  const data = await postApi<IAddFund, IUserById | IDataError>(USER_API_URL.addFund, payload)
+  return data
+}
+
+export interface IGetUsersResponse {
+  data: IBook[]
+}
+
+export const getUsersApi = async () => {
+  return await getApi<IGetUsersResponse | IDataError>(USER_API_URL.getAll)
 }

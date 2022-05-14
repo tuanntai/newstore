@@ -7,21 +7,23 @@ export const BOOK_API_URLS = {
   },
   getList: (payload: IAllBooksRequest) =>
     `user-book/getAll?search=${payload.search}&page=${payload.page}&size=${payload.size}&order=${payload.order}&status=${payload.status}`,
-  getBookById: (id: number) => {
+  getBookById: (id: string) => {
     return `user-book/${id}`
   },
   buyBook: `user-book/buy`,
   uploadThumbnail: () => `s3/images`,
-  getBookByUserId: (id: number) => {
+  getBookByUserId: (id: string) => {
     return `user-book/getBookByUserId/${id}`
   }
 }
 
 export const USER_API_URL = {
   getUser: 'users',
-  getUserById: (id: number) => {
+  getUserById: (id: string) => {
     return `users/${id}`
-  }
+  },
+  addFund: 'users/addFund',
+  getAll: 'users/getAll'
 }
 
 export const AUTH_API_URL = {

@@ -1,3 +1,10 @@
+export enum RoleState {
+  Admin = 'Admin',
+  User = 'User',
+  Shipper = 'Shipper',
+  None = 'None'
+}
+
 export interface IPostUserRequest {
   username: string
   password: string
@@ -24,6 +31,7 @@ export interface IUserInfo {
   avatarUrl: string
   isVerify: false
   balance: number
+  role: RoleState
 }
 
 export interface ICreateUserRequest {
@@ -33,11 +41,12 @@ export interface ICreateUserRequest {
   fullName: string
   address: string
   avatarUrl: string
+  role: RoleState
 }
 
 export interface IUpdateRequest {
   avatarUrl: string
-  id: number
+  id: string
   username: string
   password: string
   phone: string

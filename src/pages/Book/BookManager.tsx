@@ -14,7 +14,7 @@ import { deleteBookById, getList } from '../../redux/actions/book/book'
 import { format } from 'date-fns'
 import { EOrder } from '../../api/book/interface'
 
-const Book: React.FC = () => {
+const BookManager: React.FC = () => {
   let navigate = useNavigate()
   const dispatch = useAppDispatch()
   const [showModal, setShowModal] = useState(false)
@@ -37,7 +37,7 @@ const Book: React.FC = () => {
     setShowModal(!showModal)
   }
 
-  const deleteBook = (id: number) => {
+  const deleteBook = (id: string) => {
     dispatch(deleteBookById(id))
     setShowModal(!showModal)
   }
@@ -60,11 +60,7 @@ const Book: React.FC = () => {
       dataIndex: 'title',
       key: 'title'
     },
-    {
-      title: t`Description`,
-      dataIndex: 'description',
-      key: 'description'
-    },
+
     {
       title: t`Image`,
       dataIndex: 'imageUrl',
@@ -89,6 +85,11 @@ const Book: React.FC = () => {
       title: t`buyerId`,
       dataIndex: 'buyerId',
       key: 'buyerId'
+    },
+    {
+      title: t`Delivery State`,
+      dataIndex: 'deliveryState',
+      key: 'deliveryState'
     },
     {
       title: t`Action`,
@@ -119,11 +120,6 @@ const Book: React.FC = () => {
     <div className="book-wrapper">
       <div className="heading">
         <Typography className="heading-title">Book List</Typography>
-        <Link to="create-book">
-          <Button type="primary" icon={<PlusOutlined />}>
-            Create Book
-          </Button>
-        </Link>
       </div>
       <ListTable
         title="List Of Book"
@@ -159,4 +155,4 @@ const Book: React.FC = () => {
   )
 }
 
-export default Book
+export default BookManager

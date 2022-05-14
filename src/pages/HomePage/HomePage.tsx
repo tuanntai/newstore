@@ -47,13 +47,11 @@ const HomePage: React.FC = () => {
   const [status, setStatus] = useState('Selling')
   const [order, setOrder] = useState<EOrder>(EOrder.DESC)
   const onSearch = (value: string) => setSearchKey(value)
-  useEffect(() => {
-    dispatch(setCurrentPage('Home Page'))
-  }, [dispatch])
+
   const pagePagination = useAppSelector(bookSelectors.pagePaginationBookSelector)
   const listBook = useAppSelector(bookSelectors.bookListSelector)
   const navigate = useNavigate()
-  const handleOnClick = (id: number) => {
+  const handleOnClick = (id: string) => {
     navigate(`/book/${id}`)
   }
 
@@ -79,6 +77,11 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     dispatch(getList({ search: searchKey, page: page - 1, size, status, order }))
   }, [dispatch, searchKey, page, size, status, order])
+
+  useEffect(() => {
+    dispatch(setCurrentPage('Home Page'))
+  }, [dispatch])
+
   return (
     <div className="homepageWrapper">
       <Search

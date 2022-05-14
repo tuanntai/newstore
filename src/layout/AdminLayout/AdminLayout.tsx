@@ -17,6 +17,7 @@ import { resetUserState, userSelectors } from '../../redux/reducer/user/userRedu
 import { authLogin } from '../../redux/actions/auth/auth'
 import { getUserById } from '../../redux/actions/user/user'
 import { logOut } from '../../redux/reducer/authReducer'
+import UserBox from '../../component/UserBox/UserBox'
 const { Content, Sider, Header } = Layout
 
 const AdminLayout = ({ children }: any) => {
@@ -30,7 +31,7 @@ const AdminLayout = ({ children }: any) => {
 
   useEffect(() => {
     if (userId) {
-      dispatch(getUserById(Number(userId)))
+      dispatch(getUserById(userId))
     }
   }, [dispatch, userId])
 
@@ -67,14 +68,13 @@ const AdminLayout = ({ children }: any) => {
           <div className="login-btn">
             {accessToken ? (
               <>
-                {userInfo.avatarUrl ? (
-                  <Avatar size={'large'} icon={<img src={userInfo.avatarUrl} />} />
-                ) : (
-                  <Avatar size={'large'} style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
-                    {userInfo.fullName.slice(0, 1)}
-                  </Avatar>
-                )}
-                <Button onClick={() => navigate('/user')}>{userInfo.fullName}</Button>
+                <UserBox />
+                <Button type="primary" onClick={() => navigate('/add-fund')}>
+                  Add Fund
+                </Button>
+                <Button type="primary" onClick={() => navigate('/book/create-book')}>
+                  Sell Book
+                </Button>
                 <Button type="primary" onClick={() => handleLogOut()}>
                   Log Out
                 </Button>

@@ -1,8 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../../store'
 import { createSelector } from 'reselect'
-import { IUserInfo } from '../../../api/user/interface'
-import { createUser, getBookByUserId, getUserById, updateUser } from '../../actions/user/user'
+import { IUserInfo, RoleState } from '../../../api/user/interface'
+import {
+  addFundAction,
+  createUser,
+  getBookByUserId,
+  getUserById,
+  getUsers,
+  updateUser
+} from '../../actions/user/user'
 import { IBook } from '../../../api/book/interface'
 
 export interface IUserState {
@@ -10,6 +17,7 @@ export interface IUserState {
   error: null | string
   userInfo: IUserInfo
   listBook: IBook[]
+  users: IUserInfo[]
 }
 
 const initialState: IUserState = {
@@ -25,9 +33,11 @@ const initialState: IUserState = {
     password: '',
     phone: '',
     soldBookAmount: 0,
-    username: ''
+    username: '',
+    role: RoleState.None
   },
-  listBook: []
+  listBook: [],
+  users: []
 }
 
 const userSlice = createSlice({
@@ -45,7 +55,8 @@ const userSlice = createSlice({
         password: '',
         phone: '',
         soldBookAmount: 0,
-        username: ''
+        username: '',
+        role: RoleState.None
       }
     }
   },
@@ -54,14 +65,20 @@ const userSlice = createSlice({
       .addCase(getUserById.fulfilled, (state, action) => {
         state.userInfo = action.payload.data
       })
-      .addCase(createUser.fulfilled, (state, action) => {
-        state.userInfo = action.payload.data.data
+      .addCase(createUser.fulfilled, (state, action: any) => {
+        state.userInfo = action.payload.data.data as any
       })
-      .addCase(getBookByUserId.fulfilled, (state, action) => {
+      .addCase(getBookByUserId.fulfilled, (state, action: any) => {
         state.listBook = action.payload.data.reverse()
       })
-      .addCase(updateUser.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state, action: any) => {
         state.userInfo = action.payload.data
+      })
+      .addCase(addFundAction.fulfilled, (state, action: any) => {
+        state.userInfo.balance = action.payload.data.balance
+      })
+      .addCase(getUsers.fulfilled, (state, action: any) => {
+        state.users = action.payload.data
       })
   }
 })
@@ -70,8 +87,9 @@ const selectSelf = (state: RootState) => state.user
 
 const userInfoSelector = createSelector(selectSelf, (state) => state.userInfo)
 const userListBookSelector = createSelector(selectSelf, (state) => state.listBook)
+const usersBookSelector = createSelector(selectSelf, (state) => state.users)
 
-export const userSelectors = { userInfoSelector, userListBookSelector }
+export const userSelectors = { userInfoSelector, userListBookSelector, usersBookSelector }
 
 export const { resetUserState } = userSlice.actions
 

@@ -11,22 +11,27 @@ import {
   IAllBooksRequest,
   IAllBooksResponse,
   IBook,
+  IBookById,
   IBuyBookRequest,
-  IPostBookRequest
+  IPostBookRequest,
+  IPostBookResponse
 } from '../../../api/book/interface'
-import { instanceOfDataError } from '../../../utils/apiErrorService'
+import { IDataError, instanceOfDataError } from '../../../utils/apiErrorService'
 
-export const postBook = createAsyncThunk<string, IPostBookRequest>(
+export const postBook = createAsyncThunk<IPostBookResponse, IPostBookRequest>(
   'book/postBook',
-  async (payload: IPostBookRequest) => {
+  async (payload: IPostBookRequest, { rejectWithValue }) => {
     const response = await postBookApi(payload)
+    if (instanceOfDataError(response)) {
+      return rejectWithValue(response.error)
+    }
     return response
   }
 )
 
-export const getBookById = createAsyncThunk<IBook, number>(
+export const getBookById = createAsyncThunk<IBookById, string>(
   'book/getBookById',
-  async (id: number, { rejectWithValue }) => {
+  async (id: string, { rejectWithValue }) => {
     const response = await getBookByIdApi(id)
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
@@ -35,7 +40,7 @@ export const getBookById = createAsyncThunk<IBook, number>(
   }
 )
 
-export const deleteBookById = createAsyncThunk('book/deleteBookById', async (id: number) => {
+export const deleteBookById = createAsyncThunk('book/deleteBookById', async (id: string) => {
   const response = await deleteBookByIdApi(id)
   return response
 })
@@ -55,8 +60,11 @@ export const uploadThumbnail = createAsyncThunk('books/uploadThumbnail', async (
 
 export const buyBook = createAsyncThunk<IBook, IBuyBookRequest>(
   'book/buyBook',
-  async (payload: IBuyBookRequest) => {
+  async (payload: IBuyBookRequest, { rejectWithValue }) => {
     const response = await buyBookApi(payload)
+    if (instanceOfDataError(response)) {
+      return rejectWithValue(response.error)
+    }
     return response
   }
 )

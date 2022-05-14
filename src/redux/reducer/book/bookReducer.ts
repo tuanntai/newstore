@@ -12,10 +12,9 @@ import {
   uploadThumbnail
 } from '../../actions/book/book'
 import { notification } from 'antd'
-import { IBook } from '../../../api/book/interface'
 
 const initialState: IBookState = {
-  bookId: 0,
+  bookId: '0',
   bookList: [],
   loading: false,
   error: null,
@@ -43,6 +42,8 @@ const bookSlice = createSlice({
       })
       .addCase(postBook.fulfilled, (state, action) => {
         state.loading = false
+        state.bookList.push(action.payload.data)
+        state.pagePagination.totalItems += 1
         notification.success({
           message: 'Successfully',
           placement: 'topRight'
@@ -60,7 +61,7 @@ const bookSlice = createSlice({
       .addCase(deleteBookById.fulfilled, (state, action) => {
         state.loading = false
         state.bookList = state.bookList.filter(
-          (item: IBook) => item.id !== (action.payload as number)
+          (item) => item.id.toString() !== action.payload.toString()
         )
         notification.success({
           message: `Deleted Book Id ${action.payload} successfully!`,
@@ -78,7 +79,7 @@ const bookSlice = createSlice({
       })
       .addCase(getBookById.fulfilled, (state, action) => {
         state.loading = false
-        state.bookInfo = action.payload
+        state.bookInfo = action.payload.data
       })
       .addCase(getBookById.rejected, (state, action) => {
         state.loading = false

@@ -8,7 +8,7 @@ import UploadFile from '../../component/UploadFile/UploadFile'
 import { createUser } from '../../redux/actions/user/user'
 import { authLogin } from '../../redux/actions/auth/auth'
 import { useNavigate } from 'react-router-dom'
-import { ICreateUserRequest } from '../../api/user/interface'
+import { ICreateUserRequest, RoleState } from '../../api/user/interface'
 
 const SignUp: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -37,7 +37,8 @@ const SignUp: React.FC = () => {
         fullName: value.fullName,
         phone: value.phone,
         address: value.address,
-        avatarUrl: thumbnailImage
+        avatarUrl: thumbnailImage,
+        role: RoleState.User
       }
       dispatch(createUser(createParam)).then(() => {
         dispatch(

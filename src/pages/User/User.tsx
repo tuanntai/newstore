@@ -39,7 +39,7 @@ const User: React.FC = () => {
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getBookByUserId(Number(userId)))
+    if (userId) dispatch(getBookByUserId(userId))
   }, [dispatch, userId])
 
   const showModal = () => {
@@ -60,7 +60,7 @@ const User: React.FC = () => {
         phone: value.phone,
         address: value.address,
         avatarUrl: thumbnailImage,
-        id: Number(userId)
+        id: userId
       }
       dispatch(updateUser(updateParam))
       setThumbnailImage('')
@@ -84,7 +84,7 @@ const User: React.FC = () => {
     setIsModalVisible(false)
   }
 
-  const handleOnClick = (id: number) => {
+  const handleOnClick = (id: string) => {
     navigate(`/book/${id}`)
   }
   return (

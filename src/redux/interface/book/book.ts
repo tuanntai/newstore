@@ -1,7 +1,7 @@
 import { IBook } from '../../../api/book/interface'
 
 export interface IBookState {
-  bookId: number
+  bookId: string
   loading: boolean
   bookList: IBook[]
   bookInfo?: IBook
