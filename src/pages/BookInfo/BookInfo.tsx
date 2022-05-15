@@ -3,16 +3,22 @@ import { Modal, notification } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { USER_API_URL } from '../../api/apiUrls'
-import { EStatus } from '../../api/book/interface'
-import { IUserInfo } from '../../api/user/interface'
+import { EBookStatus } from '../../api/book/interface'
+import { IUserById, IUserInfo } from '../../api/user/interface'
 import { buyBook, getBookById } from '../../redux/actions/book/book'
+import { createDelivery } from '../../redux/actions/delivery/delivery'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { bookSelectors } from '../../redux/reducer/book/bookReducer'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
 import { getApi } from '../../utils/apiHelper'
 import { getUserIdLocal } from '../../utils/localStorageService'
-import { formatPrice } from '../../utils/toShort'
 import './BookInfo.less'
+
+export enum Status {
+  Pending = 'Pending',
+  Success = 'Success',
+  Failed = 'Failed'
+}
 
 const BookInfo: React.FC = () => {
   const { id } = useParams()
@@ -20,28 +26,42 @@ const BookInfo: React.FC = () => {
   const dispatch = useAppDispatch()
   const [isLike, setIsLike] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [status, setStatus] = useState<Status>(Status.Pending)
   const [owner, setOwner] = useState<IUserInfo>()
   const userId = getUserIdLocal()
 
   useEffect(() => {
     dispatch(setCurrentPage('Book Info'))
   }, [dispatch])
+  console.log({ bookInfo })
 
   const ownerInfoAction = useCallback(async () => {
     if (bookInfo) {
-      const response = await getApi<IUserInfo>(USER_API_URL.getUserById(bookInfo.ownerId))
-      setOwner(response)
+      const response = await getApi<IUserById>(USER_API_URL.getUserById(bookInfo.ownerId))
+      setOwner(response.data)
     }
-  }, [bookInfo?.ownerId])
+  }, [bookInfo])
+
+  useEffect(() => {
+    ownerInfoAction()
+  }, [ownerInfoAction])
 
   useEffect(() => {
     dispatch(getBookById(id as string))
-    ownerInfoAction()
-  }, [id, dispatch, ownerInfoAction])
+  }, [id, dispatch])
+
+  useEffect(() => {
+    if (status === Status.Success && bookInfo && userId && bookInfo.id) {
+      dispatch(createDelivery({ bookId: bookInfo.id, buyerId: userId }))
+      setStatus(Status.Pending)
+    }
+  }, [status, bookInfo, dispatch, userId])
 
   const handleOk = () => {
     setIsModalVisible(false)
-    if (id && userId) dispatch(buyBook({ id, buyerId: userId }))
+    if (id && userId) {
+      dispatch(buyBook({ payload: { id, buyerId: userId }, setStatus }))
+    }
   }
 
   const handleCancel = () => {
@@ -51,8 +71,8 @@ const BookInfo: React.FC = () => {
   const handleLike = () => {
     setIsLike(!isLike)
     isLike
-      ? notification.success({ message: 'Like Successful!' })
-      : notification.success({ message: 'Dislike this book' })
+      ? notification.success({ message: 'Like Successful!', placement: 'bottomRight' })
+      : notification.success({ message: 'Dislike this book', placement: 'bottomRight' })
   }
   return (
     <div className="book-detail-wrapper">
@@ -65,8 +85,8 @@ const BookInfo: React.FC = () => {
           <div className="owner">
             <div>
               <div>Author: {bookInfo?.author}</div>
-              <div>Price: {formatPrice(Number(bookInfo?.price))} </div>
-              <div>Address: {owner?.address} VND</div>
+              <div>Price: {bookInfo?.price} $ </div>
+              <div>Address: {owner?.address} </div>
             </div>
             <div>
               <div>
@@ -74,11 +94,11 @@ const BookInfo: React.FC = () => {
                 {owner?.isVerify && <CheckCircleTwoTone />}
               </div>
               Status:{' '}
-              {/* {bookInfo?.status === EStatus.SELLING ? (
+              {bookInfo && bookInfo?.status === EBookStatus.SELLING ? (
                 <span>{bookInfo?.status}</span>
               ) : (
-                <span className="sold">{bookInfo?.status.toUpperCase()}</span>
-              )} */}
+                <span className="sold">{bookInfo?.status}</span>
+              )}
             </div>
           </div>
           <div className="description"> {bookInfo?.description} </div>
@@ -95,7 +115,7 @@ const BookInfo: React.FC = () => {
                 </>
               )}
             </button>
-            {bookInfo?.status === EStatus.SELLING ? (
+            {bookInfo?.status === EBookStatus.SELLING ? (
               <button onClick={() => setIsModalVisible(!isModalVisible)}>Buy this Book</button>
             ) : (
               <button disabled>NOT AVAILABLE</button>

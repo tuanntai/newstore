@@ -12,8 +12,9 @@ import './User.less'
 import defaultImage from '../../assets/img/defaultBook.png'
 import { useNavigate } from 'react-router-dom'
 import Meta from 'antd/lib/card/Meta'
-import { EStatus } from '../../api/book/interface'
+import { EBookStatus, EOrder } from '../../api/book/interface'
 import { bookSelectors } from '../../redux/reducer/book/bookReducer'
+import { getList } from '../../redux/actions/book/book'
 
 const User: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -39,8 +40,16 @@ const User: React.FC = () => {
   }, [dispatch])
 
   useEffect(() => {
+    console.log(userId)
+
     if (userId) dispatch(getBookByUserId(userId))
   }, [dispatch, userId])
+
+  useEffect(() => {
+    dispatch(
+      getList({ search: '', page: 0, size: 100, status: EBookStatus.ALL, order: EOrder.DESC })
+    )
+  }, [dispatch])
 
   const showModal = () => {
     setIsModalVisible(true)
@@ -94,51 +103,55 @@ const User: React.FC = () => {
       </Button>
       <h1>YOUR BOOK</h1>
       <div className="listBookWrapper">
-        {listBook.map((item) => (
-          <Card
-            key={item.id}
-            hoverable
-            style={{ width: 300 }}
-            onClick={() => handleOnClick(item.id)}
-            cover={<img alt="example" src={item.imageUrl ? item.imageUrl : defaultImage} />}
-          >
-            <div className="item-info">
-              <Meta title={item.title} description={`Price: ${formatPrice(item.price)} VND`} />
-              <div>
-                Status:{' '}
-                {item.status === EStatus.SELLING ? (
-                  <span className="available"> {item.status}</span>
-                ) : (
-                  <span className="sold"> {item.status}</span>
-                )}
+        {listBook
+          .filter((item) => item.buyerId === userId)
+          .map((item) => (
+            <Card
+              key={item.id}
+              hoverable
+              style={{ width: 300 }}
+              onClick={() => handleOnClick(item.id)}
+              cover={<img alt="example" src={item.imageUrl ? item.imageUrl : defaultImage} />}
+            >
+              <div className="item-info">
+                <Meta title={item.title} description={`Price: ${formatPrice(item.price)} VND`} />
+                <div>
+                  Status:{' '}
+                  {item.status === EBookStatus.SELLING ? (
+                    <span className="available"> {item.status}</span>
+                  ) : (
+                    <span className="sold"> {item.status}</span>
+                  )}
+                </div>
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))}
       </div>
       <h1>YOUR PURCHASED BOOK</h1>
       <div className="listBookWrapper">
-        {listAllBook.map((item) => (
-          <Card
-            key={item.id}
-            hoverable
-            style={{ width: 300 }}
-            onClick={() => handleOnClick(item.id)}
-            cover={<img alt="example" src={item.imageUrl ? item.imageUrl : defaultImage} />}
-          >
-            <div className="item-info">
-              <Meta title={item.title} description={`Price: ${formatPrice(item.price)} VND`} />
-              <div>
-                Status:{' '}
-                {item.status === EStatus.SELLING ? (
-                  <span className="available"> {item.status}</span>
-                ) : (
-                  <span className="sold"> {item.status}</span>
-                )}
+        {listAllBook
+          .filter((item) => item.buyerId === userId)
+          .map((item) => (
+            <Card
+              key={item.id}
+              hoverable
+              style={{ width: 300 }}
+              onClick={() => handleOnClick(item.id)}
+              cover={<img alt="example" src={item.imageUrl ? item.imageUrl : defaultImage} />}
+            >
+              <div className="item-info">
+                <Meta title={item.title} description={`Price: ${formatPrice(item.price)} VND`} />
+                <div>
+                  Status:{' '}
+                  {item.status === EBookStatus.SELLING ? (
+                    <span className="available"> {item.status}</span>
+                  ) : (
+                    <span className="sold"> {item.status}</span>
+                  )}
+                </div>
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))}
       </div>
       <Modal
         title="Info Update Form"

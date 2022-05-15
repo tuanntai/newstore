@@ -1,6 +1,6 @@
 import { createElement, useEffect, useState } from 'react'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
-import { Avatar, Button, Layout } from 'antd'
+import { Button, Layout } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { navigateSelector } from '../../redux/reducer/navigateReducer'
 import Navbar from '../Navbar/Navbar'
@@ -13,8 +13,7 @@ import {
   removeAccessToken,
   removeUserIdLocal
 } from '../../utils/localStorageService'
-import { resetUserState, userSelectors } from '../../redux/reducer/user/userReducer'
-import { authLogin } from '../../redux/actions/auth/auth'
+import { resetUserState } from '../../redux/reducer/user/userReducer'
 import { getUserById } from '../../redux/actions/user/user'
 import { logOut } from '../../redux/reducer/authReducer'
 import UserBox from '../../component/UserBox/UserBox'
@@ -24,7 +23,7 @@ const AdminLayout = ({ children }: any) => {
   const currentPage = useAppSelector(navigateSelector.currentPageSelector)
   const [collapsed, setCollapsed] = useState(false)
   const navigate = useNavigate()
-  const userInfo = useAppSelector(userSelectors.userInfoSelector)
+  // const userInfo = useAppSelector(userSelectors.userInfoSelector)
   const accessToken = getAccessToken()
   const userId = getUserIdLocal()
   const dispatch = useAppDispatch()
@@ -44,6 +43,7 @@ const AdminLayout = ({ children }: any) => {
     dispatch(logOut())
     removeUserIdLocal()
     dispatch(resetUserState())
+    navigate('/login')
   }
   return (
     <Layout className="main">

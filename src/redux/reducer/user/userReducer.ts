@@ -11,6 +11,7 @@ import {
   updateUser
 } from '../../actions/user/user'
 import { IBook } from '../../../api/book/interface'
+import { getAccessToken } from '../../../utils/localStorageService'
 
 export interface IUserState {
   loading: boolean
@@ -28,7 +29,7 @@ const initialState: IUserState = {
     avatarUrl: '',
     balance: 0,
     fullName: '',
-    id: 0,
+    id: '0',
     isVerify: false,
     password: '',
     phone: '',
@@ -50,7 +51,7 @@ const userSlice = createSlice({
         avatarUrl: '',
         balance: 0,
         fullName: '',
-        id: 0,
+        id: '0',
         isVerify: false,
         password: '',
         phone: '',
@@ -65,10 +66,12 @@ const userSlice = createSlice({
       .addCase(getUserById.fulfilled, (state, action) => {
         state.userInfo = action.payload.data
       })
-      .addCase(createUser.fulfilled, (state, action: any) => {
-        state.userInfo = action.payload.data.data as any
+      .addCase(createUser.fulfilled, (state, action) => {
+        const accessToken = getAccessToken()
+        if (!accessToken) state.userInfo = action.payload.data
+        state.users.push(action.payload.data)
       })
-      .addCase(getBookByUserId.fulfilled, (state, action: any) => {
+      .addCase(getBookByUserId.fulfilled, (state, action) => {
         state.listBook = action.payload.data.reverse()
       })
       .addCase(updateUser.fulfilled, (state, action: any) => {

@@ -1,7 +1,7 @@
 import { Card, Input, Pagination, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { EOrder, EStatus } from '../../api/book/interface'
+import { EOrder, EBookStatus } from '../../api/book/interface'
 import { getList } from '../../redux/actions/book/book'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { bookSelectors } from '../../redux/reducer/book/bookReducer'
@@ -10,24 +10,23 @@ import './HomePage.less'
 import './component/ListBookContainer/ListBookContainer.less'
 import { formatPrice } from '../../utils/toShort'
 import defaultImage from '../../assets/img/defaultBook.png'
-const { Option } = Select
 
-const FAKE_LIST = [
+export const FAKE_LIST = [
   {
     title: 'All',
     value: ''
   },
   {
     title: 'SELLING',
-    value: EStatus.SELLING
+    value: EBookStatus.SELLING
   },
   {
     title: 'SOLD',
-    value: EStatus.SOLD
+    value: EBookStatus.SOLD
   }
 ]
 
-const ORDER_TYPE = [
+export const ORDER_TYPE = [
   {
     title: 'ASC',
     value: EOrder.ASC
@@ -37,7 +36,7 @@ const ORDER_TYPE = [
     value: EOrder.DESC
   }
 ]
-
+const { Option } = Select
 const { Meta } = Card
 const { Search } = Input
 const HomePage: React.FC = () => {
@@ -62,8 +61,6 @@ const HomePage: React.FC = () => {
   const onShowPageSizeChange = (cur: any, size: any) => {
     setSize(cur)
   }
-
-  const isSellingBook = listBook
 
   function handleChange(value: any) {
     setStatus(value)
@@ -114,9 +111,9 @@ const HomePage: React.FC = () => {
         </div>
       </div>
       <div className="listBookWrapper" style={{ flexWrap: 'wrap' }}>
-        {isSellingBook &&
-          Array.isArray(isSellingBook) &&
-          isSellingBook.map((item) => (
+        {listBook &&
+          Array.isArray(listBook) &&
+          listBook.map((item) => (
             <Card
               key={item.id}
               hoverable
@@ -128,7 +125,7 @@ const HomePage: React.FC = () => {
                 <Meta title={item.title} description={`Price: ${formatPrice(item.price)} VND`} />
                 <div>
                   Status:{' '}
-                  {item.status === EStatus.SELLING ? (
+                  {item.status === EBookStatus.SELLING ? (
                     <span className="available"> {item.status}</span>
                   ) : (
                     <span className="sold"> {item.status}</span>

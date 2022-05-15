@@ -29,3 +29,16 @@ export const USER_API_URL = {
 export const AUTH_API_URL = {
   authLogin: 'auth/login'
 }
+
+export const RECEIPT_API_URL = {
+  receipt: 'receipt',
+  receiptById: (id: string) => `receipt/${id}`,
+  findBySeller: (id: string) => `receipt/findBySeller/${id}`,
+  findByBuyer: (id: string) => `receipt/findByBuyer/${id}`
+}
+
+export const DELIVERY_API_URL = {
+  delivery: 'delivery',
+  deliveryById: (id: string) => `delivery/${id}`,
+  updateDelivery: `delivery/updateDelivery`
+}

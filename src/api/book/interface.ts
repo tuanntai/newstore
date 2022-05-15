@@ -17,7 +17,7 @@ export interface IBook {
   price: number
   startTime: string
   buyTime: string
-  status: EStatus
+  status: EBookStatus
   deliveryState: DeliveryState
 }
 
@@ -30,11 +30,25 @@ export interface AllBookById {
 }
 
 export interface IPostBookRequest {
-  ownerId: number
+  ownerId: string
   title: string
   author: string
   description: string
   imageUrl: string
+}
+
+export interface IUpdateBookRequest {
+  ownerId: string
+  buyerId: string
+  price: number
+  title: string
+  author: string
+  description: string
+  imageUrl: string
+  startTime: string
+  buyTime: string
+  status: EBookStatus
+  deliveryState: DeliveryState
 }
 
 export interface IAllBooksRequest {
@@ -63,10 +77,10 @@ export interface IAllBooksResponse {
   }
 }
 
-export enum EStatus {
+export enum EBookStatus {
   SELLING = 'Selling',
   SOLD = 'SOLD',
-  ALL = 'ALL'
+  ALL = ''
 }
 
 export interface IBuyBookRequest {

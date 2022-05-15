@@ -12,8 +12,8 @@ const UserBox: React.FC = () => {
   const navigate = useNavigate()
   return (
     <Button className="wrapper" onClick={() => navigate('/user')}>
-      {user.avatarUrl ? (
-        <Avatar size={'default'} icon={<img src={user.avatarUrl} />} />
+      {user && user.avatarUrl ? (
+        <Avatar size={'default'} icon={<img alt="avatar" src={user.avatarUrl} />} />
       ) : (
         <Avatar size={'default'} style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
           {user.fullName.slice(0, 1)}

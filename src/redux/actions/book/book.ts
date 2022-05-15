@@ -5,6 +5,7 @@ import {
   getBookByIdApi,
   getListApi,
   postBookApi,
+  updateBookApi,
   uploadThumbnailApi
 } from '../../../api/book/book'
 import {
@@ -14,9 +15,11 @@ import {
   IBookById,
   IBuyBookRequest,
   IPostBookRequest,
-  IPostBookResponse
+  IPostBookResponse,
+  IUpdateBookRequest
 } from '../../../api/book/interface'
-import { IDataError, instanceOfDataError } from '../../../utils/apiErrorService'
+import { Status } from '../../../pages/BookInfo/BookInfo'
+import { instanceOfDataError } from '../../../utils/apiErrorService'
 
 export const postBook = createAsyncThunk<IPostBookResponse, IPostBookRequest>(
   'book/postBook',
@@ -26,6 +29,17 @@ export const postBook = createAsyncThunk<IPostBookResponse, IPostBookRequest>(
       return rejectWithValue(response.error)
     }
     return response
+  }
+)
+
+export const updateBook = createAsyncThunk(
+  'book/updateBook',
+  async ({ id, payload }: { id: string; payload: IUpdateBookRequest }, { rejectWithValue }) => {
+    const response = await updateBookApi(id, payload)
+    if (instanceOfDataError(response)) {
+      return rejectWithValue(response.error)
+    }
+    return { ...response, id, data: payload }
   }
 )
 
@@ -58,13 +72,18 @@ export const uploadThumbnail = createAsyncThunk('books/uploadThumbnail', async (
   return response
 })
 
-export const buyBook = createAsyncThunk<IBook, IBuyBookRequest>(
+export const buyBook = createAsyncThunk<IBook, any>(
   'book/buyBook',
-  async (payload: IBuyBookRequest, { rejectWithValue }) => {
+  async (
+    { payload, setStatus }: { payload: IBuyBookRequest; setStatus: (state: Status) => void },
+    { rejectWithValue }
+  ) => {
     const response = await buyBookApi(payload)
     if (instanceOfDataError(response)) {
+      setStatus(Status.Failed)
       return rejectWithValue(response.error)
     }
+    setStatus(Status.Success)
     return response
   }
 )

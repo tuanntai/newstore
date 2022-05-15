@@ -36,12 +36,12 @@ const AddFund: React.FC = () => {
         <Radio.Button value={50}>50$</Radio.Button>
         <Radio.Button value={100}>100$</Radio.Button>
         <Radio.Button value={200}>200$</Radio.Button>
-        <Radio.Button value={500}>200$</Radio.Button>
+        <Radio.Button value={500}>500$</Radio.Button>
         <Radio.Button value={1000}>1.000$</Radio.Button>
       </Radio.Group>
 
       <div className="confirm-box ">
-        <Switch defaultChecked onChange={setIsConfirm} />
+        <Switch onChange={setIsConfirm} />
         <p>Confirm your choice</p>
       </div>
       <Button type="primary" onClick={handleAddFund} disabled={isConfirm === false}>

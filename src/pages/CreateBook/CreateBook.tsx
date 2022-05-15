@@ -45,7 +45,7 @@ const CreateBook: React.FC = () => {
         { name: 'description', value: '' }
       ])
       dispatch(postBook(createParam))
-      redirect('/book')
+      redirect('/')
       setThumbnailImage('')
     })
   }

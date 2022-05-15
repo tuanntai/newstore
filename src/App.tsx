@@ -15,6 +15,8 @@ import AddFund from './pages/AddFund/AddFund'
 import BookManager from './pages/Book/BookManager'
 import UserManager from './pages/UserManager/UserManager'
 import Delivery from './pages/Delivery/Delivery'
+import Receipt from './pages/Receipt/Receipt'
+import EditBook from './pages/EditBook/EditBook'
 
 const App = () => {
   return (
@@ -30,11 +32,12 @@ const App = () => {
               <Route path="user/" element={<PrivateRoute component={User} />} />
               <Route path="user-manager/" element={<PrivateRoute component={UserManager} />} />
               <Route path="book-manager/" element={<PrivateRoute component={BookManager} />} />
+              <Route path="book-manager/edit/:id" element={<EditBook />} />
+              <Route path="receipt/" element={<PrivateRoute component={Receipt} />} />
               <Route path="delivery/" element={<PrivateRoute component={Delivery} />} />
 
               <Route path="book/create-book" element={<PrivateRoute component={CreateBook} />} />
               <Route path="book/:id" element={<BookInfo />} />
-              {/* <Route path="book/edit-book/:id" element={<EditBook />} /> */}
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

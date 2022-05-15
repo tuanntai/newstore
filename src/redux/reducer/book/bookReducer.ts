@@ -9,6 +9,7 @@ import {
   getBookById,
   getList,
   postBook,
+  updateBook,
   uploadThumbnail
 } from '../../actions/book/book'
 import { notification } from 'antd'
@@ -46,7 +47,7 @@ const bookSlice = createSlice({
         state.pagePagination.totalItems += 1
         notification.success({
           message: 'Successfully',
-          placement: 'topRight'
+          placement: 'bottomRight'
         })
       })
       .addCase(postBook.rejected, (state, action) => {
@@ -65,7 +66,7 @@ const bookSlice = createSlice({
         )
         notification.success({
           message: `Deleted Book Id ${action.payload} successfully!`,
-          placement: 'topRight'
+          placement: 'bottomRight'
         })
       })
       .addCase(deleteBookById.rejected, (state, action: any) => {
@@ -79,11 +80,34 @@ const bookSlice = createSlice({
       })
       .addCase(getBookById.fulfilled, (state, action) => {
         state.loading = false
+        console.log({ action })
+
         state.bookInfo = action.payload.data
       })
       .addCase(getBookById.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload as string
+      })
+    builder
+      .addCase(updateBook.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(updateBook.fulfilled, (state, action) => {
+        state.loading = false
+        const book = state.bookList.find((item) => item.id === action.payload.id)
+        if (book) {
+          book.title = action.payload.data.title
+          book.description = action.payload.data.description
+          book.imageUrl = action.payload.data.imageUrl
+          book.price = action.payload.data.price
+          book.author = action.payload.data.author
+        }
+        notification.success({ message: 'Edit Book Successful', placement: 'bottomRight' })
+      })
+      .addCase(updateBook.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload as string
+        notification.warning({ message: action.payload as string, placement: 'bottomRight' })
       })
 
     builder
@@ -102,18 +126,18 @@ const bookSlice = createSlice({
         state.loading = false
         state.error = action.payload as string
       })
-    //   builder
-    //     .addCase(editBook.pending, (state) => {
-    //       state.loading = true
-    //     })
-    //     .addCase(editBook.fulfilled, (state) => {
-    //       state.loading = false
-    //       state.success = true
-    //     })
-    //     .addCase(editBook.rejected, (state, action) => {
-    //       state.loading = false
-    //       state.error = action.payload as string
-    //     })
+    // builder
+    //   .addCase(editBook.pending, (state) => {
+    //     state.loading = true
+    //   })
+    //   .addCase(editBook.fulfilled, (state) => {
+    //     state.loading = false
+    //     state.success = true
+    //   })
+    //   .addCase(editBook.rejected, (state, action) => {
+    //     state.loading = false
+    //     state.error = action.payload as string
+    //   })
     builder
       .addCase(uploadThumbnail.pending, (state) => {
         state.loading = true
@@ -126,10 +150,15 @@ const bookSlice = createSlice({
         state.loading = false
         state.error = action.payload as string
       })
-    builder.addCase(buyBook.fulfilled, (state, action) => {
-      state.bookInfo = action.payload
-      notification.success({ message: 'Buy Successful' })
-    })
+    builder
+      .addCase(buyBook.fulfilled, (state, action) => {
+        state.bookInfo = action.payload
+        notification.success({ message: 'Buy Successful', placement: 'bottomRight' })
+      })
+      .addCase(buyBook.rejected, (state, action) => {
+        state.error = action.payload as string
+        notification.warning({ message: action.payload as string, placement: 'bottomRight' })
+      })
   }
 })
 

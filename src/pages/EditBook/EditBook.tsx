@@ -1,139 +1,141 @@
-// import { Modal } from 'antd'
-// import React, { useEffect, useState } from 'react'
-// import { setCurrentPage } from '../../redux/reducer/navigateReducer'
-// import { Button, Typography, Form, Input } from 'antd'
-// import { useAppDispatch, useAppSelector } from '../../redux/hook'
-// import '../CreateBook/CreateBook.less'
-// import 'react-quill/dist/quill.snow.css'
-// import UploadFile from '../../component/UploadFile/UploadFile'
-// import { useParams } from 'react-router-dom'
-// import Editor from '../../component/Editor/Editor'
-// import { getBookById } from '../../redux/actions/book/book'
-// import { bookSelectors } from '../../redux/reducer/book/bookReducer'
+import { Modal } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { setCurrentPage } from '../../redux/reducer/navigateReducer'
+import { Button, Typography, Form, Input } from 'antd'
+import { useAppDispatch, useAppSelector } from '../../redux/hook'
+import UploadFile from '../../component/UploadFile/UploadFile'
+import { getBookById, updateBook } from '../../redux/actions/book/book'
+import { useNavigate, useParams } from 'react-router-dom'
+import { bookSelectors } from '../../redux/reducer/book/bookReducer'
+import { IUpdateBookRequest } from '../../api/book/interface'
 
-// const EditBook: React.FC = () => {
-//   const { id } = useParams()
-//   const [form] = Form.useForm()
-//   const dispatch = useAppDispatch()
-//   const [imgUrl, setImgUrl] = useState('')
-//   const [showModal, setShowModal] = useState(false)
-//   const [contentText, setContentText] = useState('')
-//   const bookInfo = useAppSelector(bookSelectors.bookInfoSelector)
+const { TextArea } = Input
+const Edit: React.FC = () => {
+  const { id } = useParams()
+  const dispatch = useAppDispatch()
+  const [showModal, setShowModal] = useState(false)
+  // const userInfo = useAppSelector(userSelectors.userInfoSelector)
+  const redirect = useNavigate()
+  const [form] = Form.useForm()
+  const [thumbnailImage, setThumbnailImage] = useState('')
+  const book = useAppSelector(bookSelectors.bookInfoSelector)
 
-//   const [bookFields, setBookFields] = useState([
-//     { name: 'title', value: '' },
-//     { name: 'excerpt', value: '' },
-//     { name: 'author', value: '' },
-//     { name: 'publisher', value: '' },
-//     { name: 'price', value: 0 },
-//     { name: 'amount', value: 0 },
-//     { name: 'discountPercent', value: 0 }
-//   ])
+  const [bookFields, setBookFields] = useState([
+    { name: 'title', value: book?.title },
+    { name: 'author', value: book?.author },
+    { name: 'price', value: Number(book?.price) },
+    { name: 'description', value: book?.description }
+  ])
 
-//   useEffect(() => {
-//     dispatch(setCurrentPage('Edit Book'))
-//     dispatch(getBookById(Number(id)))
-//   }, [dispatch, id])
+  useEffect(() => {
+    if (book) setThumbnailImage(book.imageUrl)
+  }, [book])
 
-//   useEffect(() => {
-//     if (bookInfo) {
-//       setContentText(bookInfo.description)
-//       setImgUrl(bookInfo.imageUrl)
-//       setBookFields([
-//         { name: 'title', value: bookInfo.title },
-//         { name: 'excerpt', value: bookInfo.excerpt },
-//         { name: 'author', value: bookInfo.author },
-//         { name: 'publisher', value: bookInfo.publisher },
-//         { name: 'price', value: bookInfo.price },
-//         { name: 'amount', value: bookInfo.amount },
-//         { name: 'discountPercent', value: bookInfo.discountPercent }
-//       ])
-//     }
-//   }, [bookInfo])
+  useEffect(() => {
+    dispatch(setCurrentPage('Edit Book'))
+    if (id) dispatch(getBookById(id))
+  }, [dispatch, id])
 
-//   const handleSubmit = () => {
-//     setShowModal(!showModal)
-//     form.validateFields().then((value) => {
-//       // const createParam = {}
-//       // dispatch(
-//       //   editBook({
-//       //     id: bookId,
-//       //     editedData: createParam
-//       //   })
-//       // )
-//       setBookFields([
-//         { name: 'title', value: '' },
-//         { name: 'excerpt', value: '' }
-//       ])
-//       setContentText('')
-//       setImgUrl('')
-//     })
-//   }
+  const handleSubmit = () => {
+    setShowModal(!showModal)
+    form.validateFields().then((value) => {
+      if (book) {
+        const updateParam: IUpdateBookRequest = {
+          ...book,
+          title: value.title,
+          description: value.description,
+          imageUrl: thumbnailImage,
+          price: value.price,
+          author: value.author,
+          ownerId: book.owner
+        }
+        setBookFields([
+          { name: 'title', value: '' },
+          { name: 'author', value: '' },
+          { name: 'price', value: 0 },
+          { name: 'description', value: '' }
+        ])
+        dispatch(updateBook({ id: book.id, payload: updateParam }))
+        redirect('/book-manager')
+        setThumbnailImage('')
+      }
+    })
+  }
 
-//   const handleCancel = () => {
-//     setShowModal(!showModal)
-//   }
+  const handleCancel = () => {
+    setShowModal(!showModal)
+  }
 
-//   return (
-//     <Form
-//       name="basic"
-//       labelCol={{ span: 2 }}
-//       form={form}
-//       fields={bookFields}
-//       onFinish={handleSubmit}
-//     >
-//       <div className="create-wrapper">
-//         <div className="left">
-//           <Form.Item name="title" label="title" rules={[{ required: true }]}>
-//             <Input />
-//           </Form.Item>
-//           <Form.Item name="excerpt" label="excerpt" rules={[{ required: true }]}>
-//             <Input />
-//           </Form.Item>
-//           <Form.Item label="content">
-//             <Editor contentText={contentText} setContentText={setContentText} />
-//           </Form.Item>
-//         </div>
-//         <div className="right">
-//           <div className="thumbnail-container">
-//             <Typography className="title">Thumbnail</Typography>
-//           </div>
-//           <div className="upload-container">
-//             <UploadFile imgUrl={imgUrl} setImgUrl={setImgUrl} />
-//           </div>
-
-//           <div className="button-container">
-//             <Button
-//               type="primary"
-//               className="submit-button"
-//               onClick={() => setShowModal(!showModal)}
-//             >
-//               Submit
-//             </Button>
-//           </div>
-//           <Modal
-//             title="Edit Book"
-//             visible={showModal}
-//             onOk={handleSubmit}
-//             onCancel={handleCancel}
-//             cancelText="Cancel"
-//             okText="Submit"
-//           >
-//             Are you sure ?
-//           </Modal>
-//         </div>
-//       </div>
-//     </Form>
-//   )
-// }
-
-// export default EditBook
-import React from 'react';
-
-// import { Container } from './styles';
-
-const EditBook: React.FC = () => {
-  return <div />;
+  return (
+    <Form
+      name="basic"
+      labelCol={{ span: 2 }}
+      form={form}
+      fields={bookFields}
+      onFinish={handleSubmit}
+    >
+      <div className="create-wrapper">
+        <div className="left">
+          <Form.Item name="title" label="title" rules={[{ required: true }]}>
+            <Input placeholder="title" />
+          </Form.Item>
+          <Form.Item name="author" label="author" rules={[{ required: true }]}>
+            <Input placeholder="author" />
+          </Form.Item>
+          <Form.Item
+            name="price"
+            label="price"
+            rules={[
+              { required: true },
+              ({ getFieldValue }) => ({
+                validator(_) {
+                  if (getFieldValue('price') > 0) {
+                    return Promise.resolve()
+                  } else {
+                    return Promise.reject(new Error('Price Should be Bigger than 0 '))
+                  }
+                }
+              })
+            ]}
+          >
+            <Input placeholder="price" />
+          </Form.Item>
+          <div>
+            <Form.Item name="description" label="description">
+              <TextArea rows={6} />
+            </Form.Item>
+          </div>
+        </div>
+        <div className="right">
+          <div className="thumbnail-container">
+            <Typography className="title">Thumbnail</Typography>
+          </div>
+          <div className="upload-container">
+            <UploadFile imgUrl={thumbnailImage} setImgUrl={setThumbnailImage} />
+          </div>
+          <div className="button-container">
+            <Button
+              type="primary"
+              className="submit-button"
+              onClick={() => setShowModal(!showModal)}
+            >
+              Update
+            </Button>
+          </div>
+          <Modal
+            title={'Edit Book'}
+            visible={showModal}
+            onOk={handleSubmit}
+            onCancel={handleCancel}
+            cancelText="Cancel"
+            okText={'Submit'}
+          >
+            Are you sure ?
+          </Modal>
+        </div>
+      </div>
+    </Form>
+  )
 }
 
-export default EditBook;
+export default Edit

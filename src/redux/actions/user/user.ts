@@ -1,11 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { IBook } from '../../../api/book/interface'
-import {
-  ICreateUserRequest,
-  IUpdateRequest,
-  IUserById,
-  IUserInfo
-} from '../../../api/user/interface'
+import { AllBookById } from '../../../api/book/interface'
+import { ICreateUserRequest, IUpdateRequest, IUserById } from '../../../api/user/interface'
 import {
   addFundApi,
   createUserApi,
@@ -23,7 +18,7 @@ export const getUserById = createAsyncThunk('user/getUserById', async (id: strin
   return response
 })
 
-export const createUser = createAsyncThunk(
+export const createUser = createAsyncThunk<IUserById, ICreateUserRequest>(
   'user/createUser',
   async (payload: ICreateUserRequest, { rejectWithValue }) => {
     const response = await createUserApi(payload)
@@ -34,7 +29,7 @@ export const createUser = createAsyncThunk(
   }
 )
 
-export const getBookByUserId = createAsyncThunk(
+export const getBookByUserId = createAsyncThunk<AllBookById, string>(
   'user/getBookByUserId',
   async (id: string, { rejectWithValue }) => {
     const response = await getBookByUserIdApi(id)

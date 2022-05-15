@@ -1,5 +1,5 @@
 import { IDataError } from '../../utils/apiErrorService'
-import { deleteApi, getApi, postApi } from '../../utils/apiHelper'
+import { deleteApi, getApi, postApi, putApi } from '../../utils/apiHelper'
 import { BOOK_API_URLS } from '../apiUrls'
 import {
   IAllBooksRequest,
@@ -8,31 +8,32 @@ import {
   IBookById,
   IBuyBookRequest,
   IPostBookRequest,
-  IPostBookResponse
+  IPostBookResponse,
+  IUpdateBookRequest
 } from './interface'
 
 export const getListApi = async (payload: IAllBooksRequest) => {
-  const response = getApi<IAllBooksResponse>(BOOK_API_URLS.getList(payload))
+  const response = await getApi<IAllBooksResponse>(BOOK_API_URLS.getList(payload))
   return response
 }
 
 export const getBookByIdApi = async (id: string) => {
-  const response = getApi<IBookById>(BOOK_API_URLS.getBookById(id))
+  const response = await getApi<IBookById>(BOOK_API_URLS.getBookById(id))
   return response
 }
 
 export const buyBookApi = async (payload: IBuyBookRequest) => {
-  const response = postApi<IBuyBookRequest, IBook>(BOOK_API_URLS.buyBook, payload)
+  const response = await postApi<IBuyBookRequest, IBook>(BOOK_API_URLS.buyBook, payload)
   return response
 }
 
 export const deleteBookByIdApi = async (id: string) => {
-  const response = deleteApi<string>(BOOK_API_URLS.getBookById(id))
+  const response = await deleteApi<string>(BOOK_API_URLS.getBookById(id))
   return response
 }
 
 export const postBookApi = async (payload: IPostBookRequest) => {
-  const response = postApi<IPostBookRequest, IPostBookResponse | IDataError>(
+  const response = await postApi<IPostBookRequest, IPostBookResponse | IDataError>(
     BOOK_API_URLS.postBook,
     payload
   )
@@ -46,4 +47,12 @@ export const uploadThumbnailApi = async (file: any) => {
     }
   })
   return data
+}
+
+export const updateBookApi = async (id: string, payload: IUpdateBookRequest) => {
+  const response = await putApi<IUpdateBookRequest, any | IDataError>(
+    BOOK_API_URLS.getBookById(id),
+    payload
+  )
+  return response
 }

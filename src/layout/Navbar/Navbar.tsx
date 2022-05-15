@@ -7,29 +7,34 @@ import {
   UserOutlined
 } from '@ant-design/icons'
 import { Menu } from 'antd'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RoleState } from '../../api/user/interface'
-import { useAppSelector } from '../../redux/hook'
-import { userSelectors } from '../../redux/reducer/user/userReducer'
-import { getAccessToken, removeAccessToken } from '../../utils/localStorageService'
+import { useAppDispatch, useAppSelector } from '../../redux/hook'
+import { logOut } from '../../redux/reducer/authReducer'
+import { navigateSelector } from '../../redux/reducer/navigateReducer'
+import { resetUserState, userSelectors } from '../../redux/reducer/user/userReducer'
+import {
+  getAccessToken,
+  removeAccessToken,
+  removeUserIdLocal
+} from '../../utils/localStorageService'
 import '../AdminLayout/AdminLayout.less'
 
 const Navbar = () => {
-  const [selectedKey, setSelectedKey] = useState('')
+  const currentPage = useAppSelector(navigateSelector.currentPageSelector)
   const accessToken = getAccessToken()
   const user = useAppSelector(userSelectors.userInfoSelector)
-
-  const handleClick = (e: any) => {
-    setSelectedKey(e.key)
-  }
-
-  const handleDisconnect = () => {
-    removeAccessToken()
-    navigate('/login')
-  }
+  const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
+
+  const handleLogOut = () => {
+    removeAccessToken()
+    dispatch(logOut())
+    removeUserIdLocal()
+    dispatch(resetUserState())
+    navigate('/login')
+  }
 
   const handleLinkClick = (link: string) => {
     navigate(link)
@@ -37,21 +42,21 @@ const Navbar = () => {
 
   return (
     <div className="navbar-menu">
-      <Menu mode="inline" onClick={handleClick} theme="dark" defaultSelectedKeys={['1']}>
-        <Menu.Item icon={<HomeOutlined />} key="1" onClick={() => handleLinkClick('/')}>
+      <Menu mode="inline" defaultActiveFirst theme="dark" activeKey={currentPage}>
+        <Menu.Item icon={<HomeOutlined />} key="Home Page" onClick={() => handleLinkClick('/')}>
           <span>Home</span>
         </Menu.Item>
-        {accessToken && (
+        {accessToken && user && (
           <>
             {[RoleState.Admin, RoleState.User, RoleState.Shipper].includes(user.role) && (
-              <Menu.Item icon={<UserOutlined />} key="2" onClick={() => handleLinkClick('user')}>
+              <Menu.Item icon={<UserOutlined />} key="User" onClick={() => handleLinkClick('user')}>
                 <span>User </span>
               </Menu.Item>
             )}
-            {[RoleState.Admin].includes(user.role) && (
+            {[RoleState.Admin, RoleState.User].includes(user.role) && (
               <Menu.Item
                 icon={<BookOutlined />}
-                key="3"
+                key="Book"
                 onClick={() => handleLinkClick('book-manager')}
               >
                 <span>Book Manager</span>
@@ -60,19 +65,32 @@ const Navbar = () => {
             {[RoleState.Admin].includes(user.role) && (
               <Menu.Item
                 icon={<UsergroupAddOutlined />}
-                key="4"
+                key="User manager"
                 onClick={() => handleLinkClick('user-manager')}
               >
                 <span>User Manager</span>
               </Menu.Item>
             )}
+            {[RoleState.Admin, RoleState.User].includes(user.role) && (
+              <Menu.Item
+                icon={<UsergroupAddOutlined />}
+                key="Receipt"
+                onClick={() => handleLinkClick('receipt')}
+              >
+                <span>Receipt</span>
+              </Menu.Item>
+            )}
             {[RoleState.Admin, RoleState.Shipper].includes(user.role) && (
-              <Menu.Item icon={<CarOutlined />} key="5" onClick={() => handleLinkClick('delivery')}>
+              <Menu.Item
+                icon={<CarOutlined />}
+                key="Delivery"
+                onClick={() => handleLinkClick('delivery')}
+              >
                 <span>Delivery</span>
               </Menu.Item>
             )}
 
-            <Menu.Item key="6" onClick={handleDisconnect} icon={<LogoutOutlined />}>
+            <Menu.Item key="6" onClick={handleLogOut} icon={<LogoutOutlined />}>
               <span>Logout</span>
             </Menu.Item>
           </>
