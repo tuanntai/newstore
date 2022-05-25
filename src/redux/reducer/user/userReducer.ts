@@ -12,6 +12,7 @@ import {
 } from '../../actions/user/user'
 import { IBook } from '../../../api/book/interface'
 import { getAccessToken } from '../../../utils/localStorageService'
+import { notification } from 'antd'
 
 export interface IUserState {
   loading: boolean
@@ -74,11 +75,15 @@ const userSlice = createSlice({
       .addCase(getBookByUserId.fulfilled, (state, action) => {
         state.listBook = action.payload.data.reverse()
       })
-      .addCase(updateUser.fulfilled, (state, action: any) => {
+      .addCase(updateUser.fulfilled, (state, action) => {
         state.userInfo = action.payload.data
       })
       .addCase(addFundAction.fulfilled, (state, action: any) => {
         state.userInfo.balance = action.payload.data.balance
+        notification.success({
+          message: `Adding Fund Successful! Your balance now: ${action.payload.data.balance}`,
+          placement: 'bottomRight'
+        })
       })
       .addCase(getUsers.fulfilled, (state, action: any) => {
         state.users = action.payload.data

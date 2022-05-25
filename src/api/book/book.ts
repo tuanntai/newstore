@@ -5,6 +5,7 @@ import {
   IAllBooksRequest,
   IAllBooksResponse,
   IBook,
+  IBookAnalyzeResponse,
   IBookById,
   IBuyBookRequest,
   IPostBookRequest,
@@ -12,7 +13,16 @@ import {
   IUpdateBookRequest
 } from './interface'
 
+export interface IBuyBookResponse {
+  data: IBook
+}
+
 export const getListApi = async (payload: IAllBooksRequest) => {
+  const response = await getApi<IAllBooksResponse>(BOOK_API_URLS.getList(payload))
+  return response
+}
+
+export const getSellingBooksApi = async (payload: IAllBooksRequest) => {
   const response = await getApi<IAllBooksResponse>(BOOK_API_URLS.getList(payload))
   return response
 }
@@ -23,7 +33,10 @@ export const getBookByIdApi = async (id: string) => {
 }
 
 export const buyBookApi = async (payload: IBuyBookRequest) => {
-  const response = await postApi<IBuyBookRequest, IBook>(BOOK_API_URLS.buyBook, payload)
+  const response = await postApi<IBuyBookRequest, IBuyBookResponse | IDataError>(
+    BOOK_API_URLS.buyBook,
+    payload
+  )
   return response
 }
 
@@ -54,5 +67,10 @@ export const updateBookApi = async (id: string, payload: IUpdateBookRequest) => 
     BOOK_API_URLS.getBookById(id),
     payload
   )
+  return response
+}
+
+export const analyzeBookApi = async () => {
+  const response = await getApi<IBookAnalyzeResponse>(BOOK_API_URLS.analyzeBook)
   return response
 }

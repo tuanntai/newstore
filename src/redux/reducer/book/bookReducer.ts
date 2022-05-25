@@ -6,8 +6,10 @@ import { IBookState } from '../../interface/book/book'
 import {
   buyBook,
   deleteBookById,
+  getAnalyze,
   getBookById,
   getList,
+  getSellingBooks,
   postBook,
   updateBook,
   uploadThumbnail
@@ -25,6 +27,19 @@ const initialState: IBookState = {
     limit: 0,
     totalItems: 0,
     totalPages: 0
+  },
+  sellingBooks: {
+    data: [],
+    currentPage: 0,
+    limit: 0,
+    totalItems: 0,
+    totalPages: 0
+  },
+  analyzeBook: {
+    allBook: 0,
+    sellingBook: 0,
+    soldBook: 0,
+    totalAmount: 0
   }
 }
 
@@ -43,7 +58,10 @@ const bookSlice = createSlice({
       })
       .addCase(postBook.fulfilled, (state, action) => {
         state.loading = false
-        state.bookList.push(action.payload.data)
+        state.bookList = []
+        state.bookList.unshift(action.payload.data)
+        state.sellingBooks.data.unshift(action.payload.data)
+        state.sellingBooks.totalItems += 1
         state.pagePagination.totalItems += 1
         notification.success({
           message: 'Successfully',
@@ -54,16 +72,14 @@ const bookSlice = createSlice({
         state.loading = false
         state.error = action.payload as string
       })
-
-    builder
       .addCase(deleteBookById.pending, (state) => {
         state.loading = true
       })
       .addCase(deleteBookById.fulfilled, (state, action) => {
         state.loading = false
-        state.bookList = state.bookList.filter(
-          (item) => item.id.toString() !== action.payload.toString()
-        )
+        state.bookList = state.bookList
+          .filter((item) => item.id.toString() !== action.payload.toString())
+          .reverse()
         notification.success({
           message: `Deleted Book Id ${action.payload} successfully!`,
           placement: 'bottomRight'
@@ -74,21 +90,17 @@ const bookSlice = createSlice({
         state.error = action.payload as string
       })
 
-    builder
       .addCase(getBookById.pending, (state) => {
         state.loading = true
       })
       .addCase(getBookById.fulfilled, (state, action) => {
         state.loading = false
-        console.log({ action })
-
         state.bookInfo = action.payload.data
       })
       .addCase(getBookById.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload as string
       })
-    builder
       .addCase(updateBook.pending, (state) => {
         state.loading = true
       })
@@ -110,13 +122,12 @@ const bookSlice = createSlice({
         notification.warning({ message: action.payload as string, placement: 'bottomRight' })
       })
 
-    builder
       .addCase(getList.pending, (state) => {
         state.loading = true
       })
       .addCase(getList.fulfilled, (state, action) => {
         state.loading = false
-        state.bookList = action.payload.data.data
+        state.bookList = action.payload.data.data.reverse()
         state.pagePagination.currentPage = action.payload.data.currentPage
         state.pagePagination.limit = action.payload.data.limit
         state.pagePagination.totalItems = action.payload.data.totalItems
@@ -126,19 +137,14 @@ const bookSlice = createSlice({
         state.loading = false
         state.error = action.payload as string
       })
-    // builder
-    //   .addCase(editBook.pending, (state) => {
-    //     state.loading = true
-    //   })
-    //   .addCase(editBook.fulfilled, (state) => {
-    //     state.loading = false
-    //     state.success = true
-    //   })
-    //   .addCase(editBook.rejected, (state, action) => {
-    //     state.loading = false
-    //     state.error = action.payload as string
-    //   })
-    builder
+      .addCase(getAnalyze.fulfilled, (state, action) => {
+        state.analyzeBook = action.payload.data
+      })
+      .addCase(getSellingBooks.fulfilled, (state, action) => {
+        state.loading = false
+        state.sellingBooks = action.payload.data
+        state.sellingBooks.data = action.payload.data.data.reverse()
+      })
       .addCase(uploadThumbnail.pending, (state) => {
         state.loading = true
       })
@@ -150,11 +156,11 @@ const bookSlice = createSlice({
         state.loading = false
         state.error = action.payload as string
       })
-    builder
       .addCase(buyBook.fulfilled, (state, action) => {
-        state.bookInfo = action.payload
+        state.bookInfo = action.payload.data
         notification.success({ message: 'Buy Successful', placement: 'bottomRight' })
       })
+
       .addCase(buyBook.rejected, (state, action) => {
         state.error = action.payload as string
         notification.warning({ message: action.payload as string, placement: 'bottomRight' })
@@ -165,9 +171,11 @@ const bookSlice = createSlice({
 const selectSelf = (state: RootState) => state.book
 
 const bookListSelector = createSelector(selectSelf, (state) => state.bookList)
+const sellingBooksSelector = createSelector(selectSelf, (state) => state.sellingBooks)
 const bookInfoSelector = createSelector(selectSelf, (state) => state.bookInfo)
 const thumbnailSelector = createSelector(selectSelf, (state) => state.thumbnailUrl)
 const bookIdSelector = createSelector(selectSelf, (state) => state.bookId)
+const analyzeSelector = createSelector(selectSelf, (state) => state.analyzeBook)
 const pagePaginationBookSelector = createSelector(selectSelf, (state) => state.pagePagination)
 
 export const bookSelectors = {
@@ -175,7 +183,9 @@ export const bookSelectors = {
   bookInfoSelector,
   thumbnailSelector,
   bookIdSelector,
-  pagePaginationBookSelector
+  pagePaginationBookSelector,
+  sellingBooksSelector,
+  analyzeSelector
 }
 export const { setBookId } = bookSlice.actions
 export default bookSlice.reducer

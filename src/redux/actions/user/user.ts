@@ -51,14 +51,14 @@ export const getUsers = createAsyncThunk<IGetUsersResponse | IDataError>(
   }
 )
 
-export const updateUser = createAsyncThunk(
+export const updateUser = createAsyncThunk<IUserById, IUpdateRequest>(
   'user/updateUser',
   async (payload: IUpdateRequest, { rejectWithValue }) => {
     const response = await updateUserApi(payload)
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
     }
-    return response
+    return { ...response, newData: payload }
   }
 )
 

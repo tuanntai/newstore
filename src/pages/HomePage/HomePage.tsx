@@ -2,7 +2,7 @@ import { Card, Input, Pagination, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EOrder, EBookStatus } from '../../api/book/interface'
-import { getList } from '../../redux/actions/book/book'
+import { getSellingBooks } from '../../redux/actions/book/book'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { bookSelectors } from '../../redux/reducer/book/bookReducer'
 import { setCurrentPage } from '../../redux/reducer/navigateReducer'
@@ -43,12 +43,10 @@ const HomePage: React.FC = () => {
   const dispatch = useAppDispatch()
   const [page, setPage] = useState(1)
   const [size, setSize] = useState(10)
-  const [status, setStatus] = useState('Selling')
   const [order, setOrder] = useState<EOrder>(EOrder.DESC)
   const onSearch = (value: string) => setSearchKey(value)
 
-  const pagePagination = useAppSelector(bookSelectors.pagePaginationBookSelector)
-  const listBook = useAppSelector(bookSelectors.bookListSelector)
+  const listBook = useAppSelector(bookSelectors.sellingBooksSelector)
   const navigate = useNavigate()
   const handleOnClick = (id: string) => {
     navigate(`/book/${id}`)
@@ -62,18 +60,22 @@ const HomePage: React.FC = () => {
     setSize(cur)
   }
 
-  function handleChange(value: any) {
-    setStatus(value)
-  }
-
   function handleOrderChange(value: EOrder) {
     setOrder(value)
   }
 
   const [searchKey, setSearchKey] = useState('')
   useEffect(() => {
-    dispatch(getList({ search: searchKey, page: page - 1, size, status, order }))
-  }, [dispatch, searchKey, page, size, status, order])
+    dispatch(
+      getSellingBooks({
+        search: searchKey,
+        page: page - 1,
+        size,
+        status: EBookStatus.SELLING,
+        order
+      })
+    )
+  }, [dispatch, searchKey, page, size, order])
 
   useEffect(() => {
     dispatch(setCurrentPage('Home Page'))
@@ -90,18 +92,8 @@ const HomePage: React.FC = () => {
       />
       <div className="filter-box">
         <div>
-          <div>Status: </div>
-          <Select defaultValue="Selling" style={{ width: 120 }} onChange={handleChange}>
-            {FAKE_LIST.map((item, index) => (
-              <Option key={index} value={item.value}>
-                {item.title}
-              </Option>
-            ))}
-          </Select>
-        </div>
-        <div>
           <div>Order: </div>
-          <Select defaultValue={EOrder.DESC} style={{ width: 120 }} onChange={handleOrderChange}>
+          <Select defaultValue={order} style={{ width: 120 }} onChange={handleOrderChange}>
             {ORDER_TYPE.map((item, index) => (
               <Option key={index} value={item.value}>
                 {item.title}
@@ -112,17 +104,17 @@ const HomePage: React.FC = () => {
       </div>
       <div className="listBookWrapper" style={{ flexWrap: 'wrap' }}>
         {listBook &&
-          Array.isArray(listBook) &&
-          listBook.map((item) => (
+          listBook.data.map((item) => (
             <Card
               key={item.id}
               hoverable
-              style={{ width: '300px' }}
+              style={{ width: '300px', boxShadow: `rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+              rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset` }}
               onClick={() => handleOnClick(item.id)}
               cover={<img alt="example" src={item.imageUrl ? item.imageUrl : defaultImage} />}
             >
               <div className="item-info">
-                <Meta title={item.title} description={`Price: ${formatPrice(item.price)} VND`} />
+                <Meta title={item.title} description={`Price: $${formatPrice(item.price)}`} />
                 <div>
                   Status:{' '}
                   {item.status === EBookStatus.SELLING ? (
@@ -136,12 +128,12 @@ const HomePage: React.FC = () => {
           ))}
       </div>
       <div className="pagination">
-        {pagePagination.totalPages > 1 && (
+        {listBook.totalPages > 1 && (
           <Pagination
             onChange={onShowSizeChange}
             onShowSizeChange={onShowPageSizeChange}
             defaultCurrent={page}
-            total={pagePagination.totalItems}
+            total={listBook.totalItems}
           />
         )}
       </div>

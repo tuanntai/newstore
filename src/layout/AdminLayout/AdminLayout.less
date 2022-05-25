@@ -7,8 +7,10 @@
 }
 .header-layout {
   padding: 0;
-  background: #CBF1F5;
+  background: #cbf1f5;
   border-bottom: 1px solid #ccc;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+    rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
 }
 
 .currentPage-name {
@@ -19,11 +21,16 @@
 
 .content-layout {
   margin: 0 16px;
+  margin-top: 80px;
   padding: 24;
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 80px);
 }
 
 .header {
+  position: fixed;
+  min-width: calc(100vw - 200px);
+  max-width: calc(100vw - 100px);
+  z-index: 10;
   display: flex;
   justify-content: space-between;
 }
@@ -36,13 +43,12 @@
 }
 
 .ant-layout-sider-children {
-  background-color: #A6E3E9;
-  
+  background-color: #a6e3e9;
 }
 .ant-menu {
-  background-color: #CBF1F5;
+  background-color: #cbf1f5;
 }
 
-.content-layout{
-  background-color: #E3FDFD;
+.content-layout {
+  background-color: #e3fdfd;
 }

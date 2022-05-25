@@ -152,7 +152,7 @@ const BookManager: React.FC = () => {
       <div className="filter-box">
         <div>
           <div>Status: </div>
-          <Select defaultValue={EBookStatus.ALL} style={{ width: 120 }} onChange={handleChange}>
+          <Select defaultValue={status} style={{ width: 120 }} onChange={handleChange}>
             {FAKE_LIST.map((item, index) => (
               <Option key={index} value={item.value}>
                 {item.title}
@@ -162,7 +162,7 @@ const BookManager: React.FC = () => {
         </div>
         <div>
           <div>Order: </div>
-          <Select defaultValue={EOrder.DESC} style={{ width: 120 }} onChange={handleOrderChange}>
+          <Select defaultValue={order} style={{ width: 120 }} onChange={handleOrderChange}>
             {ORDER_TYPE.map((item, index) => (
               <Option key={index} value={item.value}>
                 {item.title}

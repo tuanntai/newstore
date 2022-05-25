@@ -1,7 +1,7 @@
 import { CheckCircleTwoTone, DislikeOutlined, LikeOutlined } from '@ant-design/icons'
 import { Modal, notification } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { USER_API_URL } from '../../api/apiUrls'
 import { EBookStatus } from '../../api/book/interface'
 import { IUserById, IUserInfo } from '../../api/user/interface'
@@ -29,11 +29,11 @@ const BookInfo: React.FC = () => {
   const [status, setStatus] = useState<Status>(Status.Pending)
   const [owner, setOwner] = useState<IUserInfo>()
   const userId = getUserIdLocal()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(setCurrentPage('Book Info'))
   }, [dispatch])
-  console.log({ bookInfo })
 
   const ownerInfoAction = useCallback(async () => {
     if (bookInfo) {
@@ -51,11 +51,17 @@ const BookInfo: React.FC = () => {
   }, [id, dispatch])
 
   useEffect(() => {
-    if (status === Status.Success && bookInfo && userId && bookInfo.id) {
+    if (status === Status.Success && bookInfo && userId) {
       dispatch(createDelivery({ bookId: bookInfo.id, buyerId: userId }))
       setStatus(Status.Pending)
     }
   }, [status, bookInfo, dispatch, userId])
+
+  // useEffect(() => {
+  //   if (bookInfo && bookInfo.receiptInfo) {
+  //     navigate(`/receipt/${bookInfo.receiptInfo?.id}`)
+  //   }
+  // }, [bookInfo, navigate])
 
   const handleOk = () => {
     setIsModalVisible(false)

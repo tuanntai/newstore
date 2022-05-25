@@ -1,4 +1,4 @@
-import { IBook } from '../../../api/book/interface'
+import { IAllBooksData, IAllBooksResponse, IBook, IBookAnalyze } from '../../../api/book/interface'
 
 export interface IBookState {
   bookId: string
@@ -8,6 +8,8 @@ export interface IBookState {
   thumbnailUrl: string
   error: string | null
   pagePagination: IPagePagination
+  sellingBooks: IAllBooksData
+  analyzeBook: IBookAnalyze
 }
 
 interface IPagePagination {

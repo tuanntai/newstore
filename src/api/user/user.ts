@@ -41,7 +41,7 @@ export const getBookByUserIdApi = async (id: string) => {
 }
 
 export const updateUserApi = async (payload: IUpdateRequest) => {
-  const data = await patchApi<IUpdateRequest, IUserInfo | IDataError>(USER_API_URL.getUser, payload)
+  const data = await patchApi<IUpdateRequest, IUserById | IDataError>(USER_API_URL.getUser, payload)
   return data
 }
 

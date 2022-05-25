@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { Typography } from 'antd'
 import { format } from 'date-fns'
 import React, { useEffect } from 'react'
-import { RoleState } from '../../api/user/interface'
+import { IUserInfo, RoleState } from '../../api/user/interface'
 import ListTable from '../../component/ListTable/ListTable'
 import {
   getReceipts,
@@ -32,7 +32,7 @@ const columns = [
     title: t`Price`,
     dataIndex: 'price',
     key: 'price',
-    render:(text:string)=> `${text} $`
+    render: (text: string) => `${text} $`
   },
   {
     title: t`buyTime`,
@@ -41,14 +41,16 @@ const columns = [
     render: (text: string) => <div>{text && format(new Date(text), 'MM/dd/yyyy hh:mm:ss')}</div>
   },
   {
-    title: t`buyerId`,
-    dataIndex: 'buyerId',
-    key: 'buyerId'
+    title: t`buyer`,
+    dataIndex: 'buyer',
+    key: 'buyer',
+    render: (buyer: IUserInfo) => buyer && buyer.username
   },
   {
     title: t`sellerId`,
-    dataIndex: 'sellerId',
-    key: 'sellerId'
+    dataIndex: 'seller',
+    key: 'seller',
+    render: (seller: IUserInfo) => seller && seller.username
   }
 ]
 

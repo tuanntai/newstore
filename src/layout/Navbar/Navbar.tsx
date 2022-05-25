@@ -90,6 +90,16 @@ const Navbar = () => {
               </Menu.Item>
             )}
 
+            {[RoleState.Admin].includes(user.role) && (
+              <Menu.Item
+                icon={<CarOutlined />}
+                key="Analyze"
+                onClick={() => handleLinkClick('analyze')}
+              >
+                <span>Analyze</span>
+              </Menu.Item>
+            )}
+
             <Menu.Item key="6" onClick={handleLogOut} icon={<LogoutOutlined />}>
               <span>Logout</span>
             </Menu.Item>

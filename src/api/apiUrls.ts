@@ -14,7 +14,9 @@ export const BOOK_API_URLS = {
   uploadThumbnail: () => `s3/images`,
   getBookByUserId: (id: string) => {
     return `user-book/getBookByUserId/${id}`
-  }
+  },
+  analyzeBook: `user-book/getBookAnalyze`,
+  sellingBooks: 'user-book/getSelling'
 }
 
 export const USER_API_URL = {

@@ -1,6 +1,6 @@
 import { createElement, useEffect, useState } from 'react'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
-import { Button, Layout } from 'antd'
+import { BackTop, Button, Layout } from 'antd'
 import { useAppDispatch, useAppSelector } from '../../redux/hook'
 import { navigateSelector } from '../../redux/reducer/navigateReducer'
 import Navbar from '../Navbar/Navbar'
@@ -93,6 +93,7 @@ const AdminLayout = ({ children }: any) => {
         </Header>
         <Content className="site-layout-background content-layout">{children}</Content>
       </Layout>
+      <BackTop />
     </Layout>
   )
 }

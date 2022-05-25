@@ -1,9 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {
+  analyzeBookApi,
   buyBookApi,
   deleteBookByIdApi,
   getBookByIdApi,
   getListApi,
+  getSellingBooksApi,
+  IBuyBookResponse,
   postBookApi,
   updateBookApi,
   uploadThumbnailApi
@@ -12,6 +15,7 @@ import {
   IAllBooksRequest,
   IAllBooksResponse,
   IBook,
+  IBookAnalyzeResponse,
   IBookById,
   IBuyBookRequest,
   IPostBookRequest,
@@ -67,12 +71,25 @@ export const getList = createAsyncThunk<IAllBooksResponse, IAllBooksRequest>(
   }
 )
 
+export const getSellingBooks = createAsyncThunk<IAllBooksResponse, IAllBooksRequest>(
+  'book/getSellingList',
+  async (payload: IAllBooksRequest) => {
+    const response = await getSellingBooksApi(payload)
+    return response
+  }
+)
+
+export const getAnalyze = createAsyncThunk<IBookAnalyzeResponse>('book/getAnalyze', async () => {
+  const response = await analyzeBookApi()
+  return response
+})
+
 export const uploadThumbnail = createAsyncThunk('books/uploadThumbnail', async (file: any) => {
   const response = await uploadThumbnailApi(file)
   return response
 })
 
-export const buyBook = createAsyncThunk<IBook, any>(
+export const buyBook = createAsyncThunk<IBuyBookResponse, any>(
   'book/buyBook',
   async (
     { payload, setStatus }: { payload: IBuyBookRequest; setStatus: (state: Status) => void },

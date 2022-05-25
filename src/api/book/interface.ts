@@ -1,3 +1,5 @@
+import { IReceipt } from '../receipt/receipt'
+
 export enum DeliveryState {
   None = 'None',
   Waiting = 'Waiting',
@@ -19,6 +21,7 @@ export interface IBook {
   buyTime: string
   status: EBookStatus
   deliveryState: DeliveryState
+  receiptInfo?: IReceipt
 }
 
 export interface IBookById {
@@ -68,13 +71,15 @@ export enum EOrder {
   DESC = 'DESC'
 }
 export interface IAllBooksResponse {
-  data: {
-    data: IBook[]
-    totalItems: number
-    totalPages: number
-    currentPage: number
-    limit: number
-  }
+  data: IAllBooksData
+}
+
+export interface IAllBooksData {
+  data: IBook[]
+  totalItems: number
+  totalPages: number
+  currentPage: number
+  limit: number
 }
 
 export enum EBookStatus {
@@ -86,4 +91,15 @@ export enum EBookStatus {
 export interface IBuyBookRequest {
   buyerId: string
   id: string
+}
+
+export interface IBookAnalyze {
+  sellingBook: number
+  soldBook: number
+  allBook: number
+  totalAmount: number
+}
+
+export interface IBookAnalyzeResponse {
+  data: IBookAnalyze
 }

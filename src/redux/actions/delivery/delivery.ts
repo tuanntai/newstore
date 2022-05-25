@@ -59,11 +59,12 @@ export const updateDeliveryById = createAsyncThunk<any, any>(
 
 export const updateDeliveryState = createAsyncThunk<IDeliveryResponse, IUpdateDeliveryState>(
   'delivery/updateDelivery',
-  async (payload: IUpdateDeliveryState, { rejectWithValue }) => {
+  async (payload: IUpdateDeliveryState, { rejectWithValue, dispatch }) => {
     const response = await updateDeliveryStateApi(payload)
     if (instanceOfDataError(response)) {
       return rejectWithValue(response.error)
     }
+    dispatch(getDeliveries())
     return response
   }
 )

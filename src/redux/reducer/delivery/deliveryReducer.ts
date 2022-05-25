@@ -29,7 +29,7 @@ const deliverySlice = createSlice({
         state.delivery = action.payload.data
       })
       .addCase(getDeliveries.fulfilled, (state, action) => {
-        state.deliveries = action.payload.data
+        state.deliveries = action.payload.data.sort((a, b) => a.state.localeCompare(b.state))
       })
       .addCase(getDeliveryById.fulfilled, (state, action) => {
         state.delivery = action.payload.data

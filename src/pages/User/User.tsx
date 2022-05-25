@@ -1,4 +1,4 @@
-import { Button, Card, Form, Input, Modal } from 'antd'
+import { Button, Card, Form, Input, Modal, Tag } from 'antd'
 import React, { useEffect, useState } from 'react'
 import UploadFile from '../../component/UploadFile/UploadFile'
 import { getBookByUserId, updateUser } from '../../redux/actions/user/user'
@@ -15,6 +15,7 @@ import Meta from 'antd/lib/card/Meta'
 import { EBookStatus, EOrder } from '../../api/book/interface'
 import { bookSelectors } from '../../redux/reducer/book/bookReducer'
 import { getList } from '../../redux/actions/book/book'
+import { DeliveryState } from '../../api/delivery/delivery'
 
 const User: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -40,8 +41,6 @@ const User: React.FC = () => {
   }, [dispatch])
 
   useEffect(() => {
-    console.log(userId)
-
     if (userId) dispatch(getBookByUserId(userId))
   }, [dispatch, userId])
 
@@ -103,29 +102,31 @@ const User: React.FC = () => {
       </Button>
       <h1>YOUR BOOK</h1>
       <div className="listBookWrapper">
-        {listBook
-          .filter((item) => item.buyerId === userId)
-          .map((item) => (
-            <Card
-              key={item.id}
-              hoverable
-              style={{ width: 300 }}
-              onClick={() => handleOnClick(item.id)}
-              cover={<img alt="example" src={item.imageUrl ? item.imageUrl : defaultImage} />}
-            >
-              <div className="item-info">
-                <Meta title={item.title} description={`Price: ${formatPrice(item.price)} VND`} />
-                <div>
-                  Status:{' '}
-                  {item.status === EBookStatus.SELLING ? (
-                    <span className="available"> {item.status}</span>
-                  ) : (
-                    <span className="sold"> {item.status}</span>
-                  )}
-                </div>
+        {listBook.map((item) => (
+          <Card
+            key={item.id}
+            hoverable
+            style={{
+              width: 300,
+              boxShadow: `rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+            rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset`
+            }}
+            onClick={() => handleOnClick(item.id)}
+            cover={<img alt="example" src={item.imageUrl ? item.imageUrl : defaultImage} />}
+          >
+            <div className="item-info">
+              <Meta title={item.title} description={`Price: $${formatPrice(item.price)}`} />
+              <div>
+                Status:{' '}
+                {item.status === EBookStatus.SELLING ? (
+                  <span className="available"> {item.status}</span>
+                ) : (
+                  <span className="sold"> {item.status}</span>
+                )}
               </div>
-            </Card>
-          ))}
+            </div>
+          </Card>
+        ))}
       </div>
       <h1>YOUR PURCHASED BOOK</h1>
       <div className="listBookWrapper">
@@ -135,20 +136,26 @@ const User: React.FC = () => {
             <Card
               key={item.id}
               hoverable
-              style={{ width: 300 }}
+              style={{
+                width: 300,
+                boxShadow: `rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em,
+                rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset`
+              }}
               onClick={() => handleOnClick(item.id)}
               cover={<img alt="example" src={item.imageUrl ? item.imageUrl : defaultImage} />}
             >
               <div className="item-info">
-                <Meta title={item.title} description={`Price: ${formatPrice(item.price)} VND`} />
-                <div>
-                  Status:{' '}
-                  {item.status === EBookStatus.SELLING ? (
-                    <span className="available"> {item.status}</span>
-                  ) : (
-                    <span className="sold"> {item.status}</span>
-                  )}
-                </div>
+                <Meta title={item.title} description={`Price: $${formatPrice(item.price)} `} />
+                <Tag
+                  color={
+                    (item.deliveryState === DeliveryState.Waiting && '#2db7f5') ||
+                    (item.deliveryState === DeliveryState.Shipping && '#108ee9') ||
+                    (item.deliveryState === DeliveryState.Done && '#87d068') ||
+                    '#f50'
+                  }
+                >
+                  {item.deliveryState}
+                </Tag>
               </div>
             </Card>
           ))}

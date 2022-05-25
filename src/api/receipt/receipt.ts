@@ -1,13 +1,14 @@
 import { getApi } from '../../utils/apiHelper'
 import { RECEIPT_API_URL } from '../apiUrls'
+import { IUserInfo } from '../user/interface'
 
 export interface IReceipt {
   id: string
   createdAt: string
   updatedAt: string
   deletedAt: string | null
-  sellerId: string
-  buyerId: string
+  seller: IUserInfo
+  buyer: IUserInfo
   bookId: string
   price: number
 }

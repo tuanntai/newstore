@@ -17,6 +17,8 @@ import UserManager from './pages/UserManager/UserManager'
 import Delivery from './pages/Delivery/Delivery'
 import Receipt from './pages/Receipt/Receipt'
 import EditBook from './pages/EditBook/EditBook'
+import ReceiptInfo from './pages/ReceiptInfo/ReceiptInfo'
+import Analyze from './pages/Analyze/Analyze'
 
 const App = () => {
   return (
@@ -34,7 +36,9 @@ const App = () => {
               <Route path="book-manager/" element={<PrivateRoute component={BookManager} />} />
               <Route path="book-manager/edit/:id" element={<EditBook />} />
               <Route path="receipt/" element={<PrivateRoute component={Receipt} />} />
+              <Route path="receipt/:id" element={<PrivateRoute component={ReceiptInfo} />} />
               <Route path="delivery/" element={<PrivateRoute component={Delivery} />} />
+              <Route path="analyze/" element={<PrivateRoute component={Analyze} />} />
 
               <Route path="book/create-book" element={<PrivateRoute component={CreateBook} />} />
               <Route path="book/:id" element={<BookInfo />} />
