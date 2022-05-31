@@ -39,7 +39,8 @@ const initialState: IBookState = {
     allBook: 0,
     sellingBook: 0,
     soldBook: 0,
-    totalAmount: 0
+    totalAmount: 0,
+    bookCreateByDay: []
   }
 }
 

@@ -98,6 +98,13 @@ export interface IBookAnalyze {
   soldBook: number
   allBook: number
   totalAmount: number
+  bookCreateByDay: IBookAnalyzeByDay[]
+}
+
+export interface IBookAnalyzeByDay {
+  name: string
+  createdBook: number
+  soldBook: number
 }
 
 export interface IBookAnalyzeResponse {

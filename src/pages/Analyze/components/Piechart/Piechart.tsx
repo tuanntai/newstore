@@ -34,43 +34,22 @@ const renderCustomizedLabel = ({
   )
 }
 
-const getIntroOfPage = (label: string) => {
-  if (label === 'Group A') {
-    return 'Bought Book'
-  }
-  if (label === 'Group B') {
-    return 'Selling Book'
-  }
-  return ''
-}
-
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="custom-tooltip">
-        <p className="label">{`${payload[0].name} : ${payload[0].value}`}</p>
-        <p className="intro">{getIntroOfPage(active)}</p>
-        <p className="desc">Anything you want can be displayed here.</p>
-      </div>
-    )
-  }
-
-  return null
-}
-
 const Chart = ({ data }: { data: IChartData[] }) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <PieChart width={600} height={600}>
+      <PieChart width={500} height={500}>
         <Pie
           data={data}
           cx="50%"
           cy="50%"
           labelLine={false}
           label={renderCustomizedLabel}
-          outerRadius={80}
+          outerRadius={200}
           fill="#8884d8"
           dataKey="value"
+          legendType="circle"
+          startAngle={90}
+          endAngle={450}
         >
           {console.log({ data })}
           {data.map((entry: IChartData, index: number) => (
@@ -78,7 +57,7 @@ const Chart = ({ data }: { data: IChartData[] }) => {
           ))}
         </Pie>
         <Tooltip />
-        <Legend layout="centric" verticalAlign="middle" align="left" height={36} />
+        <Legend verticalAlign="bottom" align="center" height={36} />
       </PieChart>
     </ResponsiveContainer>
   )
