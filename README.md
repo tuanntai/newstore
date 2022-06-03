@@ -1,5 +1,14 @@
 # Getting Started with Create React App
 
+
+# Add to .env file 
+```bash 
+REACT_APP_API_URL=http://localhost:3001
+ ```
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
